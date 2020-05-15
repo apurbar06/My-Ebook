@@ -2,6 +2,7 @@ package com.example.myebook;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -134,5 +135,7 @@ public class MainActivity extends AppCompatActivity {
     public void setGlCourseSemester(View view) {
 
         Log.d(TAG, "onItemSelected: " + mGraduationLevel + mCourse + mSemester);
+        Intent intent = new Intent(MainActivity.this, DownloadEbook.class);
+        startActivity(intent);
     }
 }
