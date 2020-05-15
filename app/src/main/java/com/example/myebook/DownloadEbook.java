@@ -10,7 +10,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,10 +25,14 @@ import java.net.URL;
 
 public class DownloadEbook extends AppCompatActivity {
 
+    ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_ebook);
+        listView = (ListView) findViewById(R.id.listView);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,6 +80,11 @@ public class DownloadEbook extends AppCompatActivity {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                try {
+                    loadIntoListView(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             //in this method we are fetching the json string
@@ -113,6 +128,30 @@ public class DownloadEbook extends AppCompatActivity {
         //creating asynctask object and executing it
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
+    }
+
+    private void loadIntoListView(String json) throws JSONException {
+        //creating a json array from the json string
+        JSONArray jsonArray = new JSONArray(json);
+
+        //creating a string array for listview
+        String[] subjects = new String[jsonArray.length()];
+
+        //looping through all the elements in json array
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            //getting json object from the json array
+            JSONObject obj = jsonArray.getJSONObject(i);
+
+            //getting the name from the json object and putting it inside string array
+            subjects[i] = obj.getString("id");
+        }
+
+        //the array adapter to load data into list
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subjects);
+
+        //attaching adapter to listview
+        listView.setAdapter(arrayAdapter);
     }
 
 }
