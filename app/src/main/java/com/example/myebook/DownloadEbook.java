@@ -9,7 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ import java.util.HashSet;
 
 public class DownloadEbook extends AppCompatActivity {
 
+    private static final String TAG = "DownloadEbook";
     ListView listView;
 
     @Override
@@ -158,6 +162,18 @@ public class DownloadEbook extends AppCompatActivity {
 
         //attaching adapter to listview
         listView.setAdapter(arrayAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemClick: item is " + listView.getItemAtPosition(position));
+
+//                String selectedSubject = (String) listView.getItemAtPosition(position);
+//                Intent intent = new Intent();
+//                intent.setClass(this, ListItemDetail.class);
+//                intent.putExtra("selectedSubject", selectedSubject);
+//                startActivity(intent);
+            }
+        });
     }
 
 }
