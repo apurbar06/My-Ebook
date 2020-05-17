@@ -162,6 +162,8 @@ public class DownloadEbook extends AppCompatActivity {
 
         //attaching adapter to listview
         listView.setAdapter(arrayAdapter);
+
+        //onClickListener in subject listView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
