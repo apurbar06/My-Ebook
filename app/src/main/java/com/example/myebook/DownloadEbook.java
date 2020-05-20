@@ -27,13 +27,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class DownloadEbook extends AppCompatActivity {
 
     private static final String TAG = "DownloadEbook";
     ListView listView;
+    String mJsonString;
+    private boolean DownloadableEbookListPointer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,17 @@ public class DownloadEbook extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
+                if(DownloadableEbookListPointer) {
+                    try {
+                        DownloadableEbookListPointer = false;
+                        loadIntoListView(mJsonString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    this.finish();
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -90,7 +104,8 @@ public class DownloadEbook extends AppCompatActivity {
                 super.onPostExecute(s);
 
                 try {
-                    loadIntoListView(s);
+                    mJsonString = s;
+                    loadIntoListView(mJsonString);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -141,7 +156,7 @@ public class DownloadEbook extends AppCompatActivity {
 
     private void loadIntoListView(String json) throws JSONException {
         //creating a json array from the json string
-        JSONArray jsonArray = new JSONArray(json);
+        final JSONArray jsonArray = new JSONArray(json);
 
         //creating a string array for listview
         String[] subjects = new String[jsonArray.length()];
@@ -171,11 +186,44 @@ public class DownloadEbook extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: item is " + listView.getItemAtPosition(position));
 
-//                String selectedSubject = (String) listView.getItemAtPosition(position);
+                String selectedSubject = (String) listView.getItemAtPosition(position);
+                String[] subjects = new String[jsonArray.length()];
+                String[] eBooks = new String[jsonArray.length()];
+
+                DownloadableEbookListPointer = true;
+
+                //looping through all the elements in json array
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    //getting json object from the json array
+                    JSONObject obj = null;
+                    try {
+                        obj = jsonArray.getJSONObject(i);
+                        //getting the name from the json object and putting it inside string array
+                        subjects[i] = obj.getString("semester");
+                        if (subjects[i].equals(selectedSubject)) {
+                            eBooks[i] = obj.getString("subject");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+                //removing all null values from eBooks
+                List<String> list = new ArrayList<String>();
+                for(String s : eBooks) {
+                    if(s != null && s.length() > 0) {
+                        list.add(s);
+                    }
+                }
+                eBooks = list.toArray(new String[list.size()]);
 
 
                 //set the list view form where one can download ebook
-                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, uniqueSubjects);
+                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, eBooks);
                 listView.setAdapter(adapter);
             }
         });
