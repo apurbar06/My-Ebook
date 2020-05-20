@@ -135,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
     public void setGlCourseSemester(View view) {
 
         Log.d(TAG, "onItemSelected: " + mGraduationLevel + mCourse + mSemester);
+
         Intent intent = new Intent(MainActivity.this, DownloadEbook.class);
+        intent.putExtra("GraduationLevel", mGraduationLevel);
+        intent.putExtra("Course", mCourse);
+        intent.putExtra("Semester", mSemester);
         startActivity(intent);
     }
 }

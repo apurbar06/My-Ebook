@@ -37,6 +37,9 @@ public class DownloadEbook extends AppCompatActivity {
     private static final String TAG = "DownloadEbook";
     ListView listView;
     String mJsonString;
+    private String mGraduationLevel;
+    private String mCourse;
+    private String mSemester;
     private boolean DownloadableEbookListPointer = false;
 
     @Override
@@ -48,7 +51,12 @@ public class DownloadEbook extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
+        mGraduationLevel = intent.getExtras().getString("GraduationLevel");
+        mCourse = intent.getExtras().getString("Course");
+        mSemester = intent.getExtras().getString("Semester");
+        Log.d(TAG, "onCreate : "  + mGraduationLevel + mCourse + mSemester);
 
         getJSON("http://192.168.43.32/My%20Ebook%20Android%20app/getdata.php");
     }
@@ -158,7 +166,10 @@ public class DownloadEbook extends AppCompatActivity {
         //creating a json array from the json string
         final JSONArray jsonArray = new JSONArray(json);
 
-        //creating a string array for listview
+        //creating a string array
+        String[] GraduationLevel = new String[jsonArray.length()];
+        String[] Course = new String[jsonArray.length()];
+        String[] Semester = new String[jsonArray.length()];
         String[] subjects = new String[jsonArray.length()];
 
         //looping through all the elements in json array
@@ -167,9 +178,26 @@ public class DownloadEbook extends AppCompatActivity {
             //getting json object from the json array
             JSONObject obj = jsonArray.getJSONObject(i);
 
-            //getting the name from the json object and putting it inside string array
-            subjects[i] = obj.getString("semester");
+            //getting the values from the json object and putting it inside string array
+            GraduationLevel[i] = obj.getString("graduation_level");
+            Course[i] =obj.getString("department");
+            Semester[i] = obj.getString("semester");
+
+            //taking those subjects whose GraduationLevel, Course and Semester are mach with users choice
+            if(GraduationLevel[i].equals(mGraduationLevel) && Course[i].equals(mCourse) && Semester[i].equals(mSemester)) {
+                subjects[i] = obj.getString("subject");
+            }
+
         }
+
+        //removing all null values from subjects
+        List<String> list = new ArrayList<String>();
+        for(String s : subjects) {
+            if(s != null && s.length() > 0) {
+                list.add(s);
+            }
+        }
+        subjects = list.toArray(new String[list.size()]);
 
         // getting unique subjects
         final String[] uniqueSubjects = new HashSet<String>(Arrays.asList(subjects)).toArray(new String[0]);
@@ -186,7 +214,12 @@ public class DownloadEbook extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: item is " + listView.getItemAtPosition(position));
 
+                //extracting the selected subject
                 String selectedSubject = (String) listView.getItemAtPosition(position);
+
+                String[] GraduationLevel = new String[jsonArray.length()];
+                String[] Course = new String[jsonArray.length()];
+                String[] Semester = new String[jsonArray.length()];
                 String[] subjects = new String[jsonArray.length()];
                 String[] eBooks = new String[jsonArray.length()];
 
@@ -199,10 +232,16 @@ public class DownloadEbook extends AppCompatActivity {
                     JSONObject obj = null;
                     try {
                         obj = jsonArray.getJSONObject(i);
-                        //getting the name from the json object and putting it inside string array
-                        subjects[i] = obj.getString("semester");
-                        if (subjects[i].equals(selectedSubject)) {
-                            eBooks[i] = obj.getString("subject");
+
+                        //getting the values from the json object and putting it inside string array
+                        GraduationLevel[i] = obj.getString("graduation_level");
+                        Course[i] =obj.getString("department");
+                        Semester[i] = obj.getString("semester");
+                        subjects[i] = obj.getString("subject");
+
+                        //taking those eBooks whose GraduationLevel, Course, Semester and Subject are mach with users choice
+                        if (GraduationLevel[i].equals(mGraduationLevel) && Course[i].equals(mCourse) && Semester[i].equals(mSemester) && subjects[i].equals(selectedSubject)) {
+                            eBooks[i] = obj.getString("eBook_name");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
