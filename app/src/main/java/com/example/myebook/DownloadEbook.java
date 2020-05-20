@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.myebook.handler.DownloadableEbookListAdapter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,7 +157,7 @@ public class DownloadEbook extends AppCompatActivity {
         }
 
         // getting unique subjects
-        String[] uniqueSubjects = new HashSet<String>(Arrays.asList(subjects)).toArray(new String[0]);
+        final String[] uniqueSubjects = new HashSet<String>(Arrays.asList(subjects)).toArray(new String[0]);
 
         //the array adapter to load data into list
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, uniqueSubjects);
@@ -170,10 +172,11 @@ public class DownloadEbook extends AppCompatActivity {
                 Log.d(TAG, "onItemClick: item is " + listView.getItemAtPosition(position));
 
 //                String selectedSubject = (String) listView.getItemAtPosition(position);
-//                Intent intent = new Intent();
-//                intent.setClass(this, ListItemDetail.class);
-//                intent.putExtra("selectedSubject", selectedSubject);
-//                startActivity(intent);
+
+
+                //set the list view form where one can download ebook
+                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, uniqueSubjects);
+                listView.setAdapter(adapter);
             }
         });
     }
