@@ -222,6 +222,7 @@ public class DownloadEbook extends AppCompatActivity {
                 String[] Semester = new String[jsonArray.length()];
                 String[] subjects = new String[jsonArray.length()];
                 String[] eBooks = new String[jsonArray.length()];
+                String[] eBooksURL = new String[jsonArray.length()];
 
                 DownloadableEbookListPointer = true;
 
@@ -242,6 +243,7 @@ public class DownloadEbook extends AppCompatActivity {
                         //taking those eBooks whose GraduationLevel, Course, Semester and Subject are mach with users choice
                         if (GraduationLevel[i].equals(mGraduationLevel) && Course[i].equals(mCourse) && Semester[i].equals(mSemester) && subjects[i].equals(selectedSubject)) {
                             eBooks[i] = obj.getString("eBook_name");
+                            eBooksURL[i] = obj.getString("eBook_URL");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -261,8 +263,18 @@ public class DownloadEbook extends AppCompatActivity {
                 eBooks = list.toArray(new String[list.size()]);
 
 
+                //removing all null values from eBooksURL
+                List<String> List = new ArrayList<String>();
+                for(String s : eBooksURL) {
+                    if(s != null && s.length() > 0) {
+                        List.add(s);
+                    }
+                }
+                eBooksURL = List.toArray(new String[List.size()]);
+
+
                 //set the list view form where one can download ebook
-                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, eBooks);
+                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, eBooks, eBooksURL);
                 listView.setAdapter(adapter);
             }
         });
