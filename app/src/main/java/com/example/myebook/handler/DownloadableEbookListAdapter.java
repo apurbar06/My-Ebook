@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,8 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 Log.d(TAG, "onClick: button is clicked");
 
+
+
 //                DownloadManager downloadmanager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
 //                Uri uri = Uri.parse(mURL[position]);
 //
@@ -82,6 +85,10 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
 //                request.setDestinationUri(Uri.parse("file://" + "Ebook" + "/mypdf.pdf"));
 //
 //                downloadmanager.enqueue(request);
+//                new DownloadEbookFromURL().doInBackground("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+
+                new Downloader().execute("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "test.pdf");
+
             }
         });
 
