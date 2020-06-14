@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.example.myebook.R;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class DownloadableEbookListAdapter extends BaseAdapter{
@@ -24,12 +37,13 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
     private final String[] mTitle;
     private final String[] mURL;
 
+
     public DownloadableEbookListAdapter(Activity context, String[] title, String[] url) {
 
         super();
 
-        this.mContext = context;
-        this.mTitle = title;
+        mContext = context;
+        mTitle = title;
         mURL = url;
     }
 
@@ -65,7 +79,6 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
 
         // Set the title and button action
         titleText.setText(mTitle[position]);
-        // titleText.setText(mTitle.get(position));
         downloadBTN.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("LongLogTag")
             @Override
@@ -73,29 +86,113 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
                 Log.d(TAG, "onClick: button is clicked");
 
 
-
-//                DownloadManager downloadmanager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
-//                Uri uri = Uri.parse(mURL[position]);
-//
-//                DownloadManager.Request request = new DownloadManager.Request(uri);
-//                request.setTitle("My pdf");
-//                request.setDescription("Downloading");
-//                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//                request.setVisibleInDownloadsUi(false);
-//                request.setDestinationUri(Uri.parse("file://" + "Ebook" + "/mypdf.pdf"));
-//
-//                downloadmanager.enqueue(request);
-//                new DownloadEbookFromURL().doInBackground("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
-
                 new Downloader().execute("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "test.pdf");
 
             }
         });
 
 
-
-
         return view;
 
     };
+
+    private class Downloader extends AsyncTask<String, Integer, Void> {
+
+        private static final int  MEGABYTE = 1024 * 1024;
+        NotificationManagerCompat notificationManager;
+        NotificationCompat.Builder builder;
+        private static final String CHANNEL_ID = "id";
+        int notificationId = 1;
+
+
+        protected void onPreExecute(){
+            super.onPreExecute();
+            notificationManager = NotificationManagerCompat.from(mContext);
+            builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
+            builder.setContentTitle("Picture Download")
+                    .setContentText("Download in progress")
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setPriority(NotificationCompat.PRIORITY_LOW);
+
+
+
+        }
+
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
+            String fileName = strings[1];  // -> test.pdf
+            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+            File folder = new File(extStorageDirectory, "My Ebook");
+            if(!folder.exists()){
+                folder.mkdirs();
+            }
+
+            File pdfFile = new File(folder, fileName);
+            try{
+                pdfFile.createNewFile();
+            }catch (IOException e){
+//            e.printStackTrace();
+            }
+
+            downloadFile(fileUrl, pdfFile);
+            return null;
+        }
+
+
+        public void downloadFile(String fileUrl, File directory){
+
+            try {
+
+                URL url = new URL(fileUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+                //urlConnection.setRequestMethod("GET");
+                //urlConnection.setDoOutput(true);
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                FileOutputStream fileOutputStream = new FileOutputStream(directory);
+                int totalSize = urlConnection.getContentLength();
+
+                byte[] buffer = new byte[MEGABYTE];
+                int bufferLength = 0;
+                long total = 0;
+                while((bufferLength = inputStream.read(buffer))>0 ){
+                    total += bufferLength;
+                    // publishing the progress
+                    publishProgress((int)((total*100)/totalSize));
+                    // writing data to output file
+                    fileOutputStream.write(buffer, 0, bufferLength);
+                }
+                fileOutputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        protected void onProgressUpdate(Integer... progress) {
+
+            builder.setProgress(100, progress[0], false);
+            // Displays the progress bar on notification
+            notificationManager.notify(notificationId, builder.build());
+        }
+
+
+        protected void onPostExecute(Void result){
+            builder.setContentText("Download complete");
+            // Removes the progress bar
+            builder.setProgress(0,0,false);
+            notificationManager.notify(notificationId, builder.build());
+        }
+
+    }
+
+
 }
