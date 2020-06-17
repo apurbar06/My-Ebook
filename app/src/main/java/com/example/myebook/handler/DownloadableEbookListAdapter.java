@@ -28,21 +28,24 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 
 public class DownloadableEbookListAdapter extends BaseAdapter{
 
     private static final String TAG = "DownloadableEbookListAdapter";
     private final Activity mContext;
+    private final String mSubject;
     private final String[] mTitle;
     private final String[] mURL;
 
 
-    public DownloadableEbookListAdapter(Activity context, String[] title, String[] url) {
+    public DownloadableEbookListAdapter(Activity context, String subject, String[] title, String[] url) {
 
         super();
 
         mContext = context;
+        mSubject = subject;
         mTitle = title;
         mURL = url;
     }
@@ -85,8 +88,10 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 Log.d(TAG, "onClick: button is clicked");
 
+                //download pdf using new thread
+                new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, "https://www.nhc.noaa.gov/tafb_latest/USA_latest.pdf", mSubject, mTitle[position]+".pdf" );
 
-                new Downloader().execute("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "test.pdf");
+
 
             }
         });
@@ -96,25 +101,34 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
 
     };
 
+
+    /**
+     * This will execute after every click on download button
+     */
     private class Downloader extends AsyncTask<String, Integer, Void> {
 
         private static final int  MEGABYTE = 1024 * 1024;
         NotificationManagerCompat notificationManager;
         NotificationCompat.Builder builder;
         private static final String CHANNEL_ID = "id";
-        int notificationId = 1;
+        int notificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
 
 
         protected void onPreExecute(){
             super.onPreExecute();
             notificationManager = NotificationManagerCompat.from(mContext);
             builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
-            builder.setContentTitle("Picture Download")
+            builder.setContentTitle("My Ebook")
                     .setContentText("Download in progress")
                     .setSmallIcon(R.drawable.ic_launcher_background)
                     .setPriority(NotificationCompat.PRIORITY_LOW);
 
-
+            // Issue the initial notification with zero progress
+            int PROGRESS_MAX = 100;
+            int PROGRESS_CURRENT = 0;
+            builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+            notificationManager.notify(notificationId, builder.build());
 
         }
 
@@ -123,9 +137,10 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
         protected Void doInBackground(String... strings) {
 
             String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
-            String fileName = strings[1];  // -> test.pdf
+            String fileFolder = strings[1];
+            String fileName = strings[2];  // -> test.pdf
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-            File folder = new File(extStorageDirectory, "My Ebook");
+            File folder = new File(extStorageDirectory, "MyEbook/" + fileFolder);
             if(!folder.exists()){
                 folder.mkdirs();
             }
@@ -193,6 +208,9 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
         }
 
     }
+
+
+
 
 
 }
