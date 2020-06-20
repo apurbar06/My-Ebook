@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -122,6 +123,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             builder.setContentTitle("My Ebook")
                     .setContentText("Download in progress")
                     .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_LOW);
 
             // Issue the initial notification with zero progress
@@ -140,7 +142,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             String fileFolder = strings[1];
             String fileName = strings[2];  // -> test.pdf
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-            File folder = new File(extStorageDirectory, "MyEbook/" + fileFolder);
+            File folder = new File(extStorageDirectory, "My Ebook/" + fileFolder);
             if(!folder.exists()){
                 folder.mkdirs();
             }
@@ -201,7 +203,8 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
 
 
         protected void onPostExecute(Void result){
-            builder.setContentText("Download complete");
+            builder.setContentText("Download complete")
+                   .setOngoing(false);
             // Removes the progress bar
             builder.setProgress(0,0,false);
             notificationManager.notify(notificationId, builder.build());

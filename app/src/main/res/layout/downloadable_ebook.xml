@@ -25,13 +25,16 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/downloadable_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/ic_download_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="8dp"/>
+        android:layout_marginRight="8dp"
+        android:clickable="true"
+        android:src="@drawable/ic_download_icon"
+        app:backgroundTint="#ad6989"
+        app:fabSize="mini" />
 
 
 </LinearLayout>
