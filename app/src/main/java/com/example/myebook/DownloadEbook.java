@@ -274,7 +274,7 @@ public class DownloadEbook extends AppCompatActivity {
 
 
                 //set the list view form where one can download ebook
-                DownloadableEbookListAdapter adapter=new DownloadableEbookListAdapter(DownloadEbook.this, selectedSubject, eBooks, eBooksURL);
+                DownloadableEbookListAdapter adapter = new DownloadableEbookListAdapter(DownloadEbook.this, selectedSubject, eBooks, eBooksURL);
                 listView.setAdapter(adapter);
             }
         });
