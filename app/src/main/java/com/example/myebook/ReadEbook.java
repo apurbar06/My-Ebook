@@ -25,11 +25,20 @@ public class ReadEbook extends AppCompatActivity {
     private static final String TAG = "ReadEbook";
 
     ListView mListView;
+    private String mGraduationLevel;
+    private String mCourse;
+    private String mSemester;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_ebook);
+
+//        Intent intent = getIntent();
+//        mGraduationLevel = intent.getExtras().getString("GraduationLevel");
+//        mCourse = intent.getExtras().getString("Course");
+//        mSemester = intent.getExtras().getString("Semester");
+//        Log.d(TAG, "onCreate : "  + mGraduationLevel + mCourse + mSemester);
 
         loadIntoListView();
 
@@ -45,7 +54,7 @@ public class ReadEbook extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.listViewR);
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "MyEbook/");
+        File folder = new File(extStorageDirectory, "My Ebook/");
         String[] folders = folder.list();//getting the list of files in My Ebook in string array
 
         //the adapter to load data into list
@@ -69,7 +78,7 @@ public class ReadEbook extends AppCompatActivity {
                 final String selectedSubject = (String) ReadableSubjectListAdapter.getItemAtPosition(position);
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                File folder = new File(extStorageDirectory, "MyEbook/" + selectedSubject);
+                File folder = new File(extStorageDirectory, "My Ebook/" + selectedSubject);
                 String[] ebooks = folder.list();//getting the list of files in My Ebook/selectedSubject in string array
 
 
@@ -89,7 +98,7 @@ public class ReadEbook extends AppCompatActivity {
                         String selectedEbook = (String) ReadableEbookListAdapter.getItemAtPosition(position);
 
                         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                        File file = new File(extStorageDirectory, "MyEbook/" + selectedSubject + "/" + selectedEbook);
+                        File file = new File(extStorageDirectory, "My Ebook/" + selectedSubject + "/" + selectedEbook);
                         Log.d(TAG, "onItemClick: " + file);
 
                         Intent target = new Intent(Intent.ACTION_VIEW);

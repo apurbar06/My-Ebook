@@ -138,9 +138,9 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
         @Override
         protected Void doInBackground(String... strings) {
 
-            String fileUrl = strings[0];   // -> http://maven.apache.org/maven-1.x/maven.pdf
-            String fileFolder = strings[1];
-            String fileName = strings[2];  // -> test.pdf
+            String fileUrl = strings[0];   // the url for download the pdf
+            String fileFolder = strings[1];  //subject name
+            String fileName = strings[2];  // pdf file name
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
             File folder = new File(extStorageDirectory, "My Ebook/" + fileFolder);
             if(!folder.exists()){
