@@ -2,10 +2,8 @@ package com.example.myebook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.myebook.handler.DownloadableEbookListAdapter;
 
@@ -40,7 +37,7 @@ public class DownloadEbook extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    private boolean DownloadableEbookListPointer = false;
+    private boolean PointerIsAtFinishingStage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +62,9 @@ public class DownloadEbook extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(DownloadableEbookListPointer) {
+                if(PointerIsAtFinishingStage) {
                     try {
-                        DownloadableEbookListPointer = false;
+                        PointerIsAtFinishingStage = false;
                         loadIntoListView(mJsonString);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -224,7 +221,7 @@ public class DownloadEbook extends AppCompatActivity {
                 String[] eBooks = new String[jsonArray.length()];
                 String[] eBooksURL = new String[jsonArray.length()];
 
-                DownloadableEbookListPointer = true;
+                PointerIsAtFinishingStage = true;
 
                 //looping through all the elements in json array
                 for (int i = 0; i < jsonArray.length(); i++) {

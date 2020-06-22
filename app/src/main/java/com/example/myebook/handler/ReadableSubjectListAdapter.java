@@ -13,13 +13,17 @@ import com.example.myebook.R;
 public class ReadableSubjectListAdapter extends BaseAdapter {
 
     private final Activity mContext;
-    private final String[] mSubjects;
+    private static String[] mSubjects;
 
     public ReadableSubjectListAdapter(Activity context, String[] subjects) {
         super();
 
         mContext = context;
         mSubjects = subjects;
+    }
+
+    public static String getItemAtPosition(int position) {
+        return mSubjects[position];
     }
 
 
@@ -29,8 +33,8 @@ public class ReadableSubjectListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public  String getItem(int position) {
+        return mSubjects[position];
     }
 
     @Override
@@ -46,7 +50,7 @@ public class ReadableSubjectListAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.readable_subject, parent, false);
 
         // get the reference of textView
-        TextView titleText = (TextView) convertView.findViewById(R.id.grid_subject_text);
+        TextView titleText = (TextView) convertView.findViewById(R.id.subject_text);
         // Set the title and button action
         titleText.setText(mSubjects[position]);
 

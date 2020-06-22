@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/grid_subject_image"
+        android:id="@+id/subject_image"
         android:src="@drawable/ic_book_icon"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -14,7 +14,7 @@
     </ImageView>
 
     <TextView
-        android:id="@+id/grid_subject_text"
+        android:id="@+id/subject_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
