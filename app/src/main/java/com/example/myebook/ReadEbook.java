@@ -4,20 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.myebook.handler.ReadableEbookListAdapter;
 import com.example.myebook.handler.ReadableSubjectListAdapter;
-
-import org.json.JSONException;
 
 import java.io.File;
 
@@ -36,7 +36,7 @@ public class ReadEbook extends AppCompatActivity {
 
     }
 
-    private void loadIntoListView () {
+    private void loadIntoListView() {
 
         //enable the home button but keep it invisible when a subject item is clicked
         final ActionBar actionBar = getSupportActionBar();
@@ -66,7 +66,7 @@ public class ReadEbook extends AppCompatActivity {
 
 
                 //extracting the selected subject
-                String selectedSubject = (String) ReadableSubjectListAdapter.getItemAtPosition(position);
+                final String selectedSubject = (String) ReadableSubjectListAdapter.getItemAtPosition(position);
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
                 File folder = new File(extStorageDirectory, "MyEbook/" + selectedSubject);
@@ -77,6 +77,32 @@ public class ReadEbook extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.listViewR);
                 ReadableEbookListAdapter adapter = new ReadableEbookListAdapter(ReadEbook.this, ebooks);
                 listView.setAdapter(adapter);
+
+                //onClickListener in ebook listView
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        Log.d(TAG, "onItemClick: item " + ReadableEbookListAdapter.getItemAtPosition(position));
+
+                        //extracting the selected ebook
+                        String selectedEbook = (String) ReadableEbookListAdapter.getItemAtPosition(position);
+
+                        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                        File file = new File(extStorageDirectory, "MyEbook/" + selectedSubject + "/" + selectedEbook);
+                        Log.d(TAG, "onItemClick: " + file);
+
+                        Intent target = new Intent(Intent.ACTION_VIEW);
+                        target.setDataAndType(Uri.fromFile(file),"application/pdf");
+                        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        Intent intent = Intent.createChooser(target, "Open File");
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(ReadEbook.this, "Please install a pdf reader", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
 

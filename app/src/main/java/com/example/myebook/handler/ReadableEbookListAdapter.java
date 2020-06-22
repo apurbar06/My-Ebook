@@ -13,14 +13,18 @@ import com.example.myebook.R;
 public class ReadableEbookListAdapter extends BaseAdapter {
 
 
+    private static String[] mEbooks;
     private final Activity mContext;
-    private final String[] mEbooks;
 
     public ReadableEbookListAdapter(Activity context, String[] ebooks) {
         super();
 
         mContext = context;
         mEbooks = ebooks;
+    }
+
+    public static String getItemAtPosition(int position) {
+        return mEbooks[position];
     }
 
 
