@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.myebook.handler.DownloadableEbookListAdapter;
 
@@ -106,7 +107,6 @@ public class DownloadEbook extends AppCompatActivity {
             }
 
             //this method will be called after execution
-            //so here we are displaying a toast with the json string
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
@@ -122,8 +122,6 @@ public class DownloadEbook extends AppCompatActivity {
             //in this method we are fetching the json string
             @Override
             protected String doInBackground(Void... voids) {
-
-
 
                 try {
                     //creating a URL
@@ -151,10 +149,13 @@ public class DownloadEbook extends AppCompatActivity {
                     //finally returning the read string
                     return sb.toString().trim();
                 } catch (Exception e) {
-
-                    return null;
+                    runOnUiThread(new Runnable(){
+                        public void run() {
+                            Toast.makeText(DownloadEbook.this, "Please make sure that you have a proper internet connection", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return "";
                 }
-
             }
         }
 

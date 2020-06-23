@@ -39,12 +39,6 @@ public class ReadEbook extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_ebook);
 
-//        Intent intent = getIntent();
-//        mGraduationLevel = intent.getExtras().getString("GraduationLevel");
-//        mCourse = intent.getExtras().getString("Course");
-//        mSemester = intent.getExtras().getString("Semester");
-//        Log.d(TAG, "onCreate : "  + mGraduationLevel + mCourse + mSemester);
-
         loadIntoListView();
 
 
@@ -112,7 +106,11 @@ public class ReadEbook extends AppCompatActivity {
                         try {
                             startActivity(intent);
                         } catch (ActivityNotFoundException e) {
-                            Toast.makeText(ReadEbook.this, "Please install a pdf reader", Toast.LENGTH_LONG).show();
+                            runOnUiThread(new Runnable(){
+                                public void run() {
+                                    Toast.makeText(ReadEbook.this, "Please install a pdf reader", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     }
                 });
@@ -152,6 +150,20 @@ public class ReadEbook extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onClickShare(View view) {
+        try {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My Ebook");
+            String shareMessage= "\nLet me recommend you this application\n\n";
+            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+            startActivity(Intent.createChooser(shareIntent, "Choose one"));
+        } catch(Exception e) {
+            //e.toString();
         }
     }
 }

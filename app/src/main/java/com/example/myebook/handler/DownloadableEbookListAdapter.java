@@ -141,6 +141,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             String fileUrl = strings[0];   // the url for download the pdf
             String fileFolder = strings[1];  //subject name
             String fileName = strings[2];  // pdf file name
+            builder.setContentTitle(fileName);
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
             File folder = new File(extStorageDirectory, "My Ebook/" + fileFolder);
             if(!folder.exists()){
