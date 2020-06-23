@@ -8,6 +8,7 @@ import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,9 +31,8 @@ public class ReadEbook extends AppCompatActivity {
     private static final String TAG = "ReadEbook";
 
     ListView mListView;
-    private String mGraduationLevel;
-    private String mCourse;
-    private String mSemester;
+    SharedPreferences mSharedPreferences;
+    SharedPreferences.Editor mEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,6 @@ public class ReadEbook extends AppCompatActivity {
                 String[] ebooks = folder.list();//getting the list of files in My Ebook/selectedSubject in string array
 
 
-
                 ListView listView = (ListView) findViewById(R.id.listViewR);
                 ReadableEbookListAdapter adapter = new ReadableEbookListAdapter(ReadEbook.this, ebooks);
                 listView.setAdapter(adapter);
@@ -107,7 +106,7 @@ public class ReadEbook extends AppCompatActivity {
                         Log.d(TAG, "onItemClick: " + file);
 
                         Intent target = new Intent(Intent.ACTION_VIEW);
-                        target.setDataAndType(Uri.fromFile(file),"application/pdf");
+                        target.setDataAndType(Uri.fromFile(file), "application/pdf");
                         target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         Intent intent = Intent.createChooser(target, "Open File");
                         try {
@@ -138,6 +137,18 @@ public class ReadEbook extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 loadIntoListView();
+                return true;
+            case R.id.download_menu:
+                Intent intent = new Intent(ReadEbook.this, DownloadEbook.class);
+                startActivity(intent);
+                return true;
+            case R.id.setup_menu:
+                mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
+                mEditor = mSharedPreferences.edit();
+                mEditor.putString("makeSetup", "Yes"); // Storing string
+                mEditor.apply(); // apply changes
+                Intent intent1 = new Intent(ReadEbook.this, MainActivity.class);
+                startActivity(intent1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

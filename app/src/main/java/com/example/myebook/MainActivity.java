@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
          * This if part will be executed only for the very first time after installation of the app or
          * when the user will want to change the setup
          */
-        if((makeSetup == null) || (makeSetup == "Yes")) {
+        if((makeSetup == null) || (makeSetup.equals("Yes"))) {
 
             mEditor = mSharedPreferences.edit();
             mEditor.putString("makeSetup", "No"); // Storing string

@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class DownloadEbook extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
+    SharedPreferences mSharedPreferences;
     private boolean PointerIsAtFinishingStage = false;
 
     @Override
@@ -49,10 +52,10 @@ public class DownloadEbook extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        mGraduationLevel = intent.getExtras().getString("GraduationLevel");
-        mCourse = intent.getExtras().getString("Course");
-        mSemester = intent.getExtras().getString("Semester");
+        mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
+        mGraduationLevel = mSharedPreferences.getString("GraduationLevel", null);
+        mCourse = mSharedPreferences.getString("Course", null);
+        mSemester = mSharedPreferences.getString("Semester", null);
         Log.d(TAG, "onCreate : "  + mGraduationLevel + mCourse + mSemester);
 
         getJSON("http://192.168.43.32/My%20Ebook%20Android%20app/getdata.php");
@@ -148,6 +151,7 @@ public class DownloadEbook extends AppCompatActivity {
                     //finally returning the read string
                     return sb.toString().trim();
                 } catch (Exception e) {
+
                     return null;
                 }
 
