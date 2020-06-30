@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         String makeSetup = mSharedPreferences.getString("makeSetup", null); // getting String
+        String firstTimeAfterInstallation = mSharedPreferences.getString("firstTimeAfterInstallation", "Yes"); // getting String
 
 
         /**
@@ -52,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
          * when the user will want to change the setup
          */
         if((makeSetup == null) || (makeSetup.equals("Yes"))) {
+
+            if(firstTimeAfterInstallation.equals("No")) {
+                mEditor = mSharedPreferences.edit();
+                mEditor.putString("makeSetup", "No"); // Storing string
+                mEditor.apply();
+            }
 
             setContentView(R.layout.activity_main);
             mSpinnerGraduationLevel = (Spinner)findViewById(R.id.spinner_graduation_level);
@@ -165,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onItemSelected: " + mGraduationLevel + mCourse + mSemester);
 
         mEditor = mSharedPreferences.edit();
+        mEditor.putString("firstTimeAfterInstallation", "No"); // Storing string
         mEditor.putString("makeSetup", "No"); // Storing string
         mEditor.putString("GraduationLevel", mGraduationLevel);
         mEditor.putString("Course", mCourse);

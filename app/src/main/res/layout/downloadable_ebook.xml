@@ -32,7 +32,7 @@
         android:layout_marginRight="8dp"
         android:clickable="true"
         android:src="@drawable/ic_download_icon"
-        app:backgroundTint="#ad6989"
+        app:backgroundTint="#6d0c74"
         app:fabSize="mini" />
 
 
