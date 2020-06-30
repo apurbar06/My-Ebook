@@ -124,6 +124,7 @@ public class ReadEbook extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         // adding menu
+        inflater.inflate(R.menu.menu_contribute, menu);
         inflater.inflate(R.menu.menu_download, menu);
         inflater.inflate(R.menu.menu_setup, menu);
 
@@ -136,17 +137,21 @@ public class ReadEbook extends AppCompatActivity {
             case android.R.id.home:
                 loadIntoListView();
                 return true;
-            case R.id.download_menu:
-                Intent intent = new Intent(ReadEbook.this, DownloadEbook.class);
+            case R.id.contribute_menu:
+                Intent intent = new Intent(ReadEbook.this, Contribute.class);
                 startActivity(intent);
+                return true;
+            case R.id.download_menu:
+                Intent intent1 = new Intent(ReadEbook.this, DownloadEbook.class);
+                startActivity(intent1);
                 return true;
             case R.id.setup_menu:
                 mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
                 mEditor = mSharedPreferences.edit();
                 mEditor.putString("makeSetup", "Yes"); // Storing string
                 mEditor.apply(); // apply changes
-                Intent intent1 = new Intent(ReadEbook.this, MainActivity.class);
-                startActivity(intent1);
+                Intent intent2 = new Intent(ReadEbook.this, MainActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -53,10 +53,6 @@ public class MainActivity extends AppCompatActivity {
          */
         if((makeSetup == null) || (makeSetup.equals("Yes"))) {
 
-            mEditor = mSharedPreferences.edit();
-            mEditor.putString("makeSetup", "No"); // Storing string
-            mEditor.apply(); // apply changes
-
             setContentView(R.layout.activity_main);
             mSpinnerGraduationLevel = (Spinner)findViewById(R.id.spinner_graduation_level);
             mSpinnerCourse = (Spinner)findViewById(R.id.spinner_course);
@@ -168,11 +164,15 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onItemSelected: " + mGraduationLevel + mCourse + mSemester);
 
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString("makeSetup", "No"); // Storing string
         mEditor.putString("GraduationLevel", mGraduationLevel);
         mEditor.putString("Course", mCourse);
         mEditor.putString("Semester", mSemester);
         mEditor.apply(); // apply changes
         Log.d(TAG, "setGlCourseSemester: " + mSharedPreferences.getString("Course", null));
+
+
 
         Intent intent = new Intent(MainActivity.this, ReadEbook.class);
         startActivity(intent);
