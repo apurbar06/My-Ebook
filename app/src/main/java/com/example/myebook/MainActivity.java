@@ -1,5 +1,7 @@
 package com.example.myebook;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             setContentView(R.layout.activity_main);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
             mSpinnerGraduationLevel = (Spinner)findViewById(R.id.spinner_graduation_level);
             mSpinnerCourse = (Spinner)findViewById(R.id.spinner_course);
             mSpinnerSemester = (Spinner)findViewById(R.id.spinner_semester);
@@ -165,6 +171,17 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void setGlCourseSemester(View view) {
