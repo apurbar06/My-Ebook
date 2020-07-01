@@ -18,7 +18,7 @@
             android:text="Select graduation level"
             android:textSize="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp" />
         <Spinner
             android:id="@+id/cnb_spinner_graduation_level"
             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:textColorHighlight="#A9090808"
-            android:textColorLink="#AD090808" />
+            android:textColorLink="#AD090808"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
