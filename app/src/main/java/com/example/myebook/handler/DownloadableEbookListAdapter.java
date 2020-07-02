@@ -122,7 +122,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
             builder.setContentTitle("My Ebook")
                     .setContentText("Download in progress")
-                    .setSmallIcon(R.drawable.ic_book_icon)
+                    .setSmallIcon(R.drawable.ic_e)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_LOW);
 

@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,7 +35,8 @@ import java.util.List;
 public class DownloadEbook extends AppCompatActivity {
 
     private static final String TAG = "DownloadEbook";
-    ListView listView;
+    ListView mListView;
+    LinearLayout mLinLaHeaderProgress;
     String mJsonString;
     private String mGraduationLevel;
     private String mCourse;
@@ -47,7 +48,8 @@ public class DownloadEbook extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_ebook);
-        listView = (ListView) findViewById(R.id.listView);
+        mListView = (ListView) findViewById(R.id.listView);
+        mLinLaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -59,7 +61,9 @@ public class DownloadEbook extends AppCompatActivity {
         mSemester = mSharedPreferences.getString("Semester", null);
         Log.d(TAG, "onCreate : "  + mGraduationLevel + mCourse + mSemester);
 
-        getJSON("http://192.168.43.32/My%20Ebook%20Android%20app/getdata.php");
+//        getJSON("http://192.168.43.32/My%20Ebook%20Android%20app/getdata.php");
+        getJSON("https://sheetsu.com/apis/v1.0su/12e1cfc87bb8");
+
     }
 
     @Override
@@ -103,17 +107,26 @@ public class DownloadEbook extends AppCompatActivity {
             //as network operation may take some time
             @Override
             protected void onPreExecute() {
+                // SHOW THE SPINNER WHILE LOADING FEEDS
+                mLinLaHeaderProgress.setVisibility(View.VISIBLE);
+                // HIDE THE LISTVIEW WHILE LOADING FEEDS
+                mListView.setVisibility(View.GONE);
                 super.onPreExecute();
             }
 
             //this method will be called after execution
             @Override
             protected void onPostExecute(String s) {
+                // HIDE THE SPINNER AFTER LOADING FEEDS
+                mLinLaHeaderProgress.setVisibility(View.GONE);
+                // SHOW THE LISTVIEW AFTER LOADING FEEDS
+                mListView.setVisibility(View.VISIBLE);
                 super.onPostExecute(s);
 
                 try {
                     mJsonString = s;
                     loadIntoListView(mJsonString);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -208,16 +221,16 @@ public class DownloadEbook extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, uniqueSubjects);
 
         //attaching adapter to listview
-        listView.setAdapter(arrayAdapter);
+        mListView.setAdapter(arrayAdapter);
 
         //onClickListener in subject listView
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: item is " + listView.getItemAtPosition(position));
+                Log.d(TAG, "onItemClick: item is " + mListView.getItemAtPosition(position));
 
                 //extracting the selected subject
-                String selectedSubject = (String) listView.getItemAtPosition(position);
+                String selectedSubject = (String) mListView.getItemAtPosition(position);
 
                 String[] GraduationLevel = new String[jsonArray.length()];
                 String[] Course = new String[jsonArray.length()];
@@ -277,7 +290,7 @@ public class DownloadEbook extends AppCompatActivity {
 
                 //set the list view form where one can download ebook
                 DownloadableEbookListAdapter adapter = new DownloadableEbookListAdapter(DownloadEbook.this, selectedSubject, eBooks, eBooksURL);
-                listView.setAdapter(adapter);
+                mListView.setAdapter(adapter);
             }
         });
     }
