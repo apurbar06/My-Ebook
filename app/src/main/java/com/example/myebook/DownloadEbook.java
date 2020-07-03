@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ public class DownloadEbook extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    SharedPreferences mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
     private boolean PointerIsAtFinishingStage = false;
 
     @Override
@@ -78,6 +79,8 @@ public class DownloadEbook extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
+                    Intent intent = new Intent(DownloadEbook.this, ReadEbook.class);
+                    startActivity(intent);
                     this.finish();
                 }
 

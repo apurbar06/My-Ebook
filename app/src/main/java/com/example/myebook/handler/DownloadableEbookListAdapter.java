@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -35,6 +36,10 @@ import java.util.Date;
 public class DownloadableEbookListAdapter extends BaseAdapter{
 
     private static final String TAG = "DownloadableEbookListAdapter";
+    private String mGraduationLevel;
+    private String mCourse;
+    private String mSemester;
+    private SharedPreferences mSharedPreferences;
     private final Activity mContext;
     private final String mSubject;
     private final String[] mTitle;
@@ -138,8 +143,13 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
         @Override
         protected Void doInBackground(String... strings) {
 
+            mSharedPreferences = mContext.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
+            mGraduationLevel = mSharedPreferences.getString("GraduationLevel", null);
+            mCourse = mSharedPreferences.getString("Course", null);
+            mSemester = mSharedPreferences.getString("Semester", null);
+
             String fileUrl = strings[0];   // the url for download the pdf
-            String fileFolder = strings[1];  //subject name
+            String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
             String fileName = strings[2];  // pdf file name
             builder.setContentTitle(fileName);
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();

@@ -5,7 +5,7 @@
     tools:context=".ReadEbook">
 
     <item
-        android:id="@+id/setup_menu"
+        android:id="@+id/setup"
         android:orderInCategory="100"
         android:title="Setup"
         app:showAsAction="never" />

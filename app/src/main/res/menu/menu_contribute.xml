@@ -5,7 +5,7 @@
     tools:context=".ReadEbook">
 
     <item
-        android:id="@+id/contribute_menu"
+        android:id="@+id/contribute"
         android:orderInCategory="100"
         android:title="Contribute"
         app:showAsAction="never" />
