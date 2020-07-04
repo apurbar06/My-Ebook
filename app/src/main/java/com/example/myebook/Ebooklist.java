@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myebook.handler.ReadableEbookListAdapter;
-import com.example.myebook.handler.ReadableSubjectListAdapter;
 
 import java.io.File;
 
@@ -32,6 +31,7 @@ public class Ebooklist extends AppCompatActivity {
     private String mCourse;
     private String mSemester;
     private  String mClickedSubject;
+    ReadableEbookListAdapter mEbookListAdapter;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private boolean readyForDelete = false;
@@ -65,8 +65,8 @@ public class Ebooklist extends AppCompatActivity {
 
 
         ListView listView = (ListView) findViewById(R.id.listViewEbook);
-        ReadableEbookListAdapter adapter = new ReadableEbookListAdapter(Ebooklist.this, ebooks);
-        listView.setAdapter(adapter);
+        mEbookListAdapter = new ReadableEbookListAdapter(Ebooklist.this, ebooks, readyForDelete);
+        listView.setAdapter(mEbookListAdapter);
 
         //onClickListener in ebook listView
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -184,12 +184,12 @@ public class Ebooklist extends AppCompatActivity {
 
     private void deleteCheckedEbooks() {
 
-//        for(int i = 0; i< mSubjectListAdapter.mCheckBoxState.length ; i++) {
-//            if (mSubjectListAdapter.mCheckBoxState[i] == true) {
-//                Log.d(TAG, "deleteCheckedItems: " + ReadableSubjectListAdapter.getItemAtPosition(i));
-//                String subjectToDelete = ReadableSubjectListAdapter.getItemAtPosition(i);
-//                File dir = new File(Environment.getExternalStorageDirectory() + "/My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ subjectToDelete);
-//
+        for(int i = 0; i< mEbookListAdapter.mCheckBoxState.length ; i++) {
+            if (mEbookListAdapter.mCheckBoxState[i] == true) {
+                Log.d(TAG, "deleteCheckedItems: " + ReadableEbookListAdapter.getItemAtPosition(i));
+                String ebookToDelete = ReadableEbookListAdapter.getItemAtPosition(i);
+                File file = new File(Environment.getExternalStorageDirectory() + "/My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ mClickedSubject +"/"+ ebookToDelete);
+
 //                //to delete a particular diretory first files in that directory should be deleted
 //                if (dir.isDirectory()) {
 //                    String[] children = dir.list();
@@ -198,10 +198,9 @@ public class Ebooklist extends AppCompatActivity {
 //                        new File(dir, children[j]).delete();
 //                    }
 //                }
-//                dir.delete();
-//                Log.d(TAG, "deleteCheckedItems: " + ReadableSubjectListAdapter.getItemAtPosition(i));
-//            }
-//        }
+                file.delete();
+            }
+        }
         readyForDelete = false;
         loadEbookIntoListView();
 

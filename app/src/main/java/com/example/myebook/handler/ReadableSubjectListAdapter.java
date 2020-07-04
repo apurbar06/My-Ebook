@@ -56,7 +56,7 @@ public class ReadableSubjectListAdapter extends BaseAdapter {
 
         // get the references
         TextView titleText = (TextView) convertView.findViewById(R.id.subject_text);
-        final CheckBox checkBox = convertView.findViewById(R.id.checkbox);
+        final CheckBox checkBox = convertView.findViewById(R.id.subject_check_box);
 
 
         // if for delete add external listener in list view and check box

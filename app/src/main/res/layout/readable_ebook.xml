@@ -5,6 +5,12 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <CheckBox
+        android:id="@+id/ebook_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/ebook_image"
         android:src="@drawable/ic_ebook"

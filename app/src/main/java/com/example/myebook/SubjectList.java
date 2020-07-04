@@ -27,9 +27,9 @@ public class SubjectList extends AppCompatActivity {
     private String mCourse;
     private String mSemester;
     private  String mClickedSubject;
+    private ReadableSubjectListAdapter mSubjectListAdapter;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private ReadableSubjectListAdapter mSubjectListAdapter;
     private boolean readyForDelete = false;
 
 
