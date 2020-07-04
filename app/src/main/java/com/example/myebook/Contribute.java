@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -156,10 +158,25 @@ public class Contribute extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_attach, menu);
+        inflater.inflate(R.menu.menu_send, menu);
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
+                return true;
+            case R.id.send:
+                sendEmail();
+                return true;
+            case R.id.attach:
+                openFolder();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -179,7 +196,7 @@ public class Contribute extends AppCompatActivity {
     /**
      * This will execute when the send button is clicked
      */
-    public void onClickSendEmail(View view) {
+    public void sendEmail() {
         Log.d(TAG, "sendEmail: " + mGraduationLevel + mCourse + mSemester + mEditText.getText().toString());
 
         mFileName = mEditText.getText().toString();
@@ -207,7 +224,7 @@ public class Contribute extends AppCompatActivity {
     /**
      * This will execute when the attach button is clicked
      */
-    public void onClickOpenFolder(View view) {
+    public void openFolder() {
         Intent intent = new Intent();
         intent.setType("application/pdf");
         intent.setAction(Intent.ACTION_GET_CONTENT);
