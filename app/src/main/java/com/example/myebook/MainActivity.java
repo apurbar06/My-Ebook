@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
              * time after installation the app
              */
         } else {
-            Intent intent = new Intent(MainActivity.this, ReadEbook.class);
+            Intent intent = new Intent(MainActivity.this, SubjectList.class);
             startActivity(intent);
             finish();
         }
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Intent intent = new Intent(MainActivity.this, ReadEbook.class);
+        Intent intent = new Intent(MainActivity.this, SubjectList.class);
         startActivity(intent);
         finish();
     }

@@ -16,11 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Ebooklist"></activity>
+        <activity android:name=".SubjectList" />
         <activity
             android:name=".Contribute"
-            android:label="Contribute">
-        </activity>
-        <activity android:name=".ReadEbook" />
+            android:label="Contribute"></activity>
+<!--        <activity android:name=".ReadEbook" />-->
         <activity
             android:name=".DownloadEbook"
             android:label="Download" />

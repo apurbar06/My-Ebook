@@ -1,14 +1,11 @@
 package com.example.myebook;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,48 +15,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.myebook.handler.ReadableEbookListAdapter;
 import com.example.myebook.handler.ReadableSubjectListAdapter;
 
 import java.io.File;
 
-public class ReadEbook extends AppCompatActivity {
-    private static final String TAG = "ReadEbook";
+public class SubjectList extends AppCompatActivity {
+    private static final String TAG = "SubjectList";
 
-    ListView mListView;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
+    private  String mClickedSubject;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
+    private ReadableSubjectListAdapter mSubjectListAdapter;
     private boolean readyForDelete = false;
-    ReadableSubjectListAdapter mSubjectListAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_ebook);
-
-        loadIntoListView();
-
-
-    }
-
-    private void loadIntoListView() {
-
-        //enable the home button but keep it invisible when a subject item is clicked
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        setContentView(R.layout.activity_subject_list);
 
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         mGraduationLevel = mSharedPreferences.getString("GraduationLevel", null);
         mCourse = mSharedPreferences.getString("Course", null);
         mSemester = mSharedPreferences.getString("Semester", null);
-        mListView = (ListView) findViewById(R.id.listViewR);
+
+        loadSubjectIntoListView();
+    }
+
+
+    private void loadSubjectIntoListView() {
+
+        ListView mSubjectListView = (ListView) findViewById(R.id.listViewSubject);
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/");
@@ -71,69 +61,29 @@ public class ReadEbook extends AppCompatActivity {
 //        Log.d(TAG, "loadIntoListView: " + folders);
 
         //the adapter to load data into list
-        mSubjectListAdapter = new ReadableSubjectListAdapter(ReadEbook.this, folders, readyForDelete);
+        mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, folders, readyForDelete);
         //attaching adapter to mGridView
-        mListView.setAdapter(mSubjectListAdapter);
+        mSubjectListView.setAdapter(mSubjectListAdapter);
 
 
         //onClickListener in subject mListView
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mSubjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //make visible the home button
-                actionBar.setDisplayHomeAsUpEnabled(true);
 
                 Log.d(TAG, "onItemClick: item is " + ReadableSubjectListAdapter.getItemAtPosition(position));
 
 
                 //extracting the selected subject
-                final String selectedSubject = (String) ReadableSubjectListAdapter.getItemAtPosition(position);
+                mClickedSubject = (String) ReadableSubjectListAdapter.getItemAtPosition(position);
 
-                String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                File folder = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + selectedSubject);
-                String[] ebooks = folder.list();//getting the list of files in selectedSubject in string array
-
-
-                ListView listView = (ListView) findViewById(R.id.listViewR);
-                ReadableEbookListAdapter adapter = new ReadableEbookListAdapter(ReadEbook.this, ebooks);
-                listView.setAdapter(adapter);
-
-                //onClickListener in ebook listView
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        Log.d(TAG, "onItemClick: item " + ReadableEbookListAdapter.getItemAtPosition(position));
-
-                        //extracting the selected ebook
-                        String selectedEbook = (String) ReadableEbookListAdapter.getItemAtPosition(position);
-
-                        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                        File file = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + selectedSubject + "/" + selectedEbook);
-                        Log.d(TAG, "onItemClick: " + file);
-
-                        Intent target = new Intent(Intent.ACTION_VIEW);
-                        target.setDataAndType(Uri.fromFile(file), "application/pdf");
-                        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        Intent intent = Intent.createChooser(target, "Open File");
-                        try {
-                            startActivity(intent);
-                        } catch (ActivityNotFoundException e) {
-                            runOnUiThread(new Runnable(){
-                                public void run() {
-                                    Toast.makeText(ReadEbook.this, "Please install a pdf reader", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    }
-                });
+                Intent intent = new Intent(SubjectList.this, Ebooklist.class);
+                intent.putExtra("clickedSubject", mClickedSubject);
+                startActivity(intent);
             }
         });
 
     }
-
-
 
 
     @Override
@@ -150,6 +100,7 @@ public class ReadEbook extends AppCompatActivity {
 
         return true;
     }
+
 
     /**
      * this method is called when the user click the three dot icon
@@ -183,38 +134,35 @@ public class ReadEbook extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                loadIntoListView();
-                return true;
             case R.id.contribute:
-                Intent intent = new Intent(ReadEbook.this, Contribute.class);
+                Intent intent = new Intent(SubjectList.this, Contribute.class);
                 startActivity(intent);
                 return true;
             case R.id.download:
-                Intent intent1 = new Intent(ReadEbook.this, DownloadEbook.class);
+                Intent intent1 = new Intent(SubjectList.this, DownloadEbook.class);
                 startActivity(intent1);
-                this.finish();
                 return true;
             case R.id.mark:
                 // reverse the current status of readyForDelete
                 readyForDelete = !readyForDelete;
-                loadIntoListView();
+                loadSubjectIntoListView();
                 return true;
             case R.id.delete:
-                deleteCheckedItems();
+                deleteCheckedSubjects();
                 return true;
             case R.id.setup:
                 mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
                 mEditor = mSharedPreferences.edit();
                 mEditor.putString("makeSetup", "Yes"); // Storing string
                 mEditor.apply(); // apply changes
-                Intent intent2 = new Intent(ReadEbook.this, MainActivity.class);
+                Intent intent2 = new Intent(SubjectList.this, MainActivity.class);
                 startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public void onClickShare(View view) {
         try {
@@ -230,25 +178,32 @@ public class ReadEbook extends AppCompatActivity {
         }
     }
 
-    private void deleteCheckedItems() {
+
+
+    private void deleteCheckedSubjects() {
 
         for(int i = 0; i< mSubjectListAdapter.mCheckBoxState.length ; i++) {
             if (mSubjectListAdapter.mCheckBoxState[i] == true) {
                 Log.d(TAG, "deleteCheckedItems: " + ReadableSubjectListAdapter.getItemAtPosition(i));
                 String subjectToDelete = ReadableSubjectListAdapter.getItemAtPosition(i);
                 File dir = new File(Environment.getExternalStorageDirectory() + "/My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ subjectToDelete);
-//                if (dir.isDirectory()) {
-//                    String[] children = dir.list();
-//                    for (int j = 0; j < children.length; j++)
-//                    {
-//                        new File(dir, children[j]).delete();
-//                    }
-//                }
+
+                //to delete a particular diretory first files in that directory should be deleted
+                if (dir.isDirectory()) {
+                    String[] children = dir.list();
+                    for (int j = 0; j < children.length; j++)
+                    {
+                        new File(dir, children[j]).delete();
+                    }
+                }
                 dir.delete();
+                Log.d(TAG, "deleteCheckedItems: " + ReadableSubjectListAdapter.getItemAtPosition(i));
             }
         }
         readyForDelete = false;
-        loadIntoListView();
+        loadSubjectIntoListView();
 
     }
+
+
 }

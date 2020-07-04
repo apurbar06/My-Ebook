@@ -79,8 +79,8 @@ public class DownloadEbook extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    Intent intent = new Intent(DownloadEbook.this, ReadEbook.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(DownloadEbook.this, ReadEbook.class);
+//                    startActivity(intent);
                     this.finish();
                 }
 
