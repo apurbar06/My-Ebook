@@ -137,10 +137,12 @@ public class SubjectList extends AppCompatActivity {
             case R.id.contribute:
                 Intent intent = new Intent(SubjectList.this, Contribute.class);
                 startActivity(intent);
+                this.finish();
                 return true;
             case R.id.download:
                 Intent intent1 = new Intent(SubjectList.this, DownloadEbook.class);
                 startActivity(intent1);
+                this.finish();
                 return true;
             case R.id.mark:
                 // reverse the current status of readyForDelete
@@ -157,6 +159,7 @@ public class SubjectList extends AppCompatActivity {
                 mEditor.apply(); // apply changes
                 Intent intent2 = new Intent(SubjectList.this, MainActivity.class);
                 startActivity(intent2);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

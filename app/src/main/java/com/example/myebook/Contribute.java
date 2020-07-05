@@ -170,6 +170,8 @@ public class Contribute extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent(Contribute.this, SubjectList.class);
+                startActivity(intent);
                 this.finish();
                 return true;
             case R.id.send:
@@ -184,14 +186,16 @@ public class Contribute extends AppCompatActivity {
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_FROM_STORAGE && resultCode == RESULT_OK) {
-            URI = data.getData();
-            mTvAttachment.setText(URI.getLastPathSegment());
-//            tvAttachment.setVisibility(View.VISIBLE);
-        }
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent(Contribute.this, SubjectList.class);
+        startActivity(intent);
+        this.finish();
     }
+
+
+
 
     /**
      * This will execute when the send button is clicked
@@ -231,4 +235,18 @@ public class Contribute extends AppCompatActivity {
         intent.putExtra("return-data", true);
         startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_STORAGE);
     }
+
+
+    /**
+     * This will execute when startActivityForResult() in openFolder is called
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_FROM_STORAGE && resultCode == RESULT_OK) {
+            URI = data.getData();
+            mTvAttachment.setText(URI.getLastPathSegment());
+//            tvAttachment.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

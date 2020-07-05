@@ -115,12 +115,9 @@ public class Ebooklist extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         // adding menu
-        inflater.inflate(R.menu.menu_contribute, menu);
-        inflater.inflate(R.menu.menu_download, menu);
         inflater.inflate(R.menu.menu_mark, menu);
         // adding the delete menu by default
         inflater.inflate(R.menu.menu_delete, menu);
-        inflater.inflate(R.menu.menu_setup, menu);
 
         return true;
     }
@@ -133,23 +130,14 @@ public class Ebooklist extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem contribute = menu.findItem(R.id.contribute);
-        MenuItem download = menu.findItem(R.id.download);
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
-        MenuItem setup = menu.findItem(R.id.setup);
         if (readyForDelete) {
             mark.setTitle("Undo");
             delete.setVisible(true);
-            contribute.setVisible(false);
-            download.setVisible(false);
-            setup.setVisible(false);
         } else {
             mark.setTitle("Mark");
             delete.setVisible(false);
-            contribute.setVisible(true);
-            download.setVisible(true);
-            setup.setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -161,14 +149,6 @@ public class Ebooklist extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
-            case R.id.contribute:
-                Intent intent = new Intent(Ebooklist.this, Contribute.class);
-                startActivity(intent);
-                return true;
-            case R.id.download:
-                Intent intent1 = new Intent(Ebooklist.this, DownloadEbook.class);
-                startActivity(intent1);
-                return true;
             case R.id.mark:
                 // reverse the current status of readyForDelete
                 readyForDelete = !readyForDelete;
@@ -176,14 +156,6 @@ public class Ebooklist extends AppCompatActivity {
                 return true;
             case R.id.delete:
                 deleteCheckedEbooks();
-                return true;
-            case R.id.setup:
-                mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
-                mEditor = mSharedPreferences.edit();
-                mEditor.putString("makeSetup", "Yes"); // Storing string
-                mEditor.apply(); // apply changes
-                Intent intent2 = new Intent(Ebooklist.this, MainActivity.class);
-                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

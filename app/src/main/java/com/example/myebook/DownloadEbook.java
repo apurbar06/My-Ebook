@@ -79,14 +79,31 @@ public class DownloadEbook extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-//                    Intent intent = new Intent(DownloadEbook.this, ReadEbook.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(DownloadEbook.this, SubjectList.class);
+                    startActivity(intent);
                     this.finish();
                 }
 
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        if(PointerIsAtFinishingStage) {
+            try {
+                PointerIsAtFinishingStage = false;
+                loadIntoListView(mJsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Intent intent = new Intent(DownloadEbook.this, SubjectList.class);
+            startActivity(intent);
+            this.finish();
         }
     }
 

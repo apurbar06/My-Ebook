@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent intent = new Intent(MainActivity.this, SubjectList.class);
             startActivity(intent);
-            finish();
+            this.finish();
         }
 
     }
@@ -177,12 +177,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent(MainActivity.this, SubjectList.class);
+                startActivity(intent);
                 this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Intent intent = new Intent(MainActivity.this, SubjectList.class);
+        startActivity(intent);
+        this.finish();
+    }
+
 
     public void setGlCourseSemester(View view) {
 
@@ -201,6 +213,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, SubjectList.class);
         startActivity(intent);
-        finish();
+        this.finish();
     }
 }
