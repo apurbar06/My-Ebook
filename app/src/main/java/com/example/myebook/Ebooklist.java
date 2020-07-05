@@ -82,8 +82,18 @@ public class Ebooklist extends AppCompatActivity {
                 File file = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject + "/" + clickedEbook);
                 Log.d(TAG, "onItemClick: " + file);
 
+                //extracting the extension like pdf/ppt/pptx
+                String last3 = ((clickedEbook == null) || (clickedEbook.length() < 3)) ? clickedEbook : clickedEbook.substring(clickedEbook.length() - 3);
+                String last4 = ((clickedEbook == null) || (clickedEbook.length() < 4)) ? clickedEbook: clickedEbook.substring(clickedEbook.length() - 4);
+
+
                 Intent target = new Intent(Intent.ACTION_VIEW);
-                target.setDataAndType(Uri.fromFile(file), "application/pdf");
+                //set type pdf/ppt if the file is an pdf/ppt file
+                if(last3.equals("pdf")) {
+                    target.setDataAndType(Uri.fromFile(file), "application/pdf");
+                } else if(last3.equals("ppt") || last4.equals("pptx")) {
+                    target.setDataAndType(Uri.fromFile(file), "application/vnd.ms-powerpoint");
+                }
                 target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 Intent intent = Intent.createChooser(target, "Open File");
                 try {
