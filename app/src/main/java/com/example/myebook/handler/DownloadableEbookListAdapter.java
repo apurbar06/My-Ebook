@@ -2,17 +2,15 @@ package com.example.myebook.handler;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -44,6 +42,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
     private final String mSubject;
     private final String[] mTitle;
     private final String[] mURL;
+    private AlphaAnimation buttonClicked = new AlphaAnimation(0.2f, 1.0f);
 
 
     public DownloadableEbookListAdapter(Activity context, String subject, String[] title, String[] url) {
@@ -94,7 +93,11 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 Log.d(TAG, "onClick: button is clicked");
 
-                Log.d(TAG, "onClick: " + mURL[position]);
+                //to make effect when button is clicked
+                buttonClicked.setDuration(500);
+                buttonClicked.setStartOffset(200);
+                buttonClicked.setFillAfter(true);
+                v.startAnimation(buttonClicked);
 
                 //download pdf using new thread
                 new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,  mURL[position], mSubject, mTitle[position]);
