@@ -57,16 +57,17 @@ public class MainActivity extends AppCompatActivity {
          */
         if((makeSetup == null) || (makeSetup.equals("Yes"))) {
 
+            setContentView(R.layout.activity_main);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setHomeButtonEnabled(true);
             if(firstTimeAfterInstallation.equals("No")) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
                 mEditor = mSharedPreferences.edit();
                 mEditor.putString("makeSetup", "No"); // Storing string
                 mEditor.apply();
             }
 
-            setContentView(R.layout.activity_main);
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+
             mSpinnerGraduationLevel = (Spinner)findViewById(R.id.spinner_graduation_level);
             mSpinnerCourse = (Spinner)findViewById(R.id.spinner_course);
             mSpinnerSemester = (Spinner)findViewById(R.id.spinner_semester);
@@ -190,9 +191,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Intent intent = new Intent(MainActivity.this, SubjectList.class);
-        startActivity(intent);
-        this.finish();
+        String firstTimeAfterInstallation = mSharedPreferences.getString("firstTimeAfterInstallation", "Yes"); // getting String
+        if(firstTimeAfterInstallation.equals("Yes")) {
+            this.finish();
+        } else {
+            Intent intent = new Intent(MainActivity.this, SubjectList.class);
+            startActivity(intent);
+            this.finish();
+        }
+
     }
 
 

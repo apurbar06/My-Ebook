@@ -94,8 +94,12 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 Log.d(TAG, "onClick: button is clicked");
 
+                //removing the " "
+                String theUrl = ((mURL[position] == null) || (mURL[position].length() < 3)) ? mURL[position] : mURL[position].substring(1 , mURL[position].length()-1);
+                Log.d(TAG, "onClick: " + theUrl);
+
                 //download pdf using new thread
-                new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR, "https://www.nhc.noaa.gov/tafb_latest/USA_latest.pdf", mSubject, mTitle[position]+".pdf" );
+                new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,  theUrl, mSubject, mTitle[position]);
 
 
 

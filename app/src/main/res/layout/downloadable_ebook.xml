@@ -23,17 +23,16 @@
         android:maxLines="2"
         android:layout_marginLeft="10dp"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+    <ImageButton
         android:id="@+id/downloadable_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
         android:clickable="true"
-        android:src="@drawable/ic_download_icon"
-        app:backgroundTint="#4A80BA"
-        app:fabSize="mini" />
+        android:background="@drawable/ic_download_icon" />
 
 
 </RelativeLayout>
