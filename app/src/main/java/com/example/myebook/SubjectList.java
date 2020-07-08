@@ -61,6 +61,7 @@ public class SubjectList extends AppCompatActivity {
 //        Log.d(TAG, "loadIntoListView: " + folders);
 
         //the adapter to load data into list
+        assert folders != null;
         mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, folders, readyForDelete);
         //attaching adapter to mGridView
         mSubjectListView.setAdapter(mSubjectListAdapter);

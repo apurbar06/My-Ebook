@@ -94,12 +94,10 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
             public void onClick(View v) {
                 Log.d(TAG, "onClick: button is clicked");
 
-                //removing the " "
-                String theUrl = ((mURL[position] == null) || (mURL[position].length() < 3)) ? mURL[position] : mURL[position].substring(1 , mURL[position].length()-1);
-                Log.d(TAG, "onClick: " + theUrl);
+                Log.d(TAG, "onClick: " + mURL[position]);
 
                 //download pdf using new thread
-                new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,  theUrl, mSubject, mTitle[position]);
+                new Downloader().executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,  mURL[position], mSubject, mTitle[position]);
 
 
 

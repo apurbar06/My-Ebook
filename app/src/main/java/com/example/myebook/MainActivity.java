@@ -8,12 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+        File folder = new File(extStorageDirectory, "My Ebook");
+        if(!folder.exists()){
+            folder.mkdirs();
+        }
 
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         String makeSetup = mSharedPreferences.getString("makeSetup", null); // getting String
