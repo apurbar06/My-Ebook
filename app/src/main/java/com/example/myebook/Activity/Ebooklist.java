@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ import java.io.File;
 public class Ebooklist extends AppCompatActivity {
     private static final String TAG = "Ebooklist";
 
+    private ListView mEbookListView;
+    private LinearLayout mEmptyMessage;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
@@ -49,6 +52,8 @@ public class Ebooklist extends AppCompatActivity {
         Intent intent = getIntent();
         mClickedSubject = intent.getStringExtra("clickedSubject");
 
+        mEbookListView = (ListView) findViewById(R.id.listViewEbook);
+        mEmptyMessage = (LinearLayout) findViewById(R.id.emptyMessageEbook);
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         mGraduationLevel = mSharedPreferences.getString("GraduationLevel", null);
         mCourse = mSharedPreferences.getString("Course", null);
@@ -65,12 +70,21 @@ public class Ebooklist extends AppCompatActivity {
         String[] ebooks = folder.list();//getting the list of files in selectedSubject in string array
 
 
-        ListView listView = (ListView) findViewById(R.id.listViewEbook);
+        //showing empty message while ebooks array is empty
+        assert ebooks != null;
+        if(ebooks.length == 0) {
+            mEmptyMessage.setVisibility(View.VISIBLE);
+            mEbookListView.setVisibility(View.GONE);
+        } else {
+            mEbookListView.setVisibility(View.VISIBLE);
+            mEmptyMessage.setVisibility(View.GONE);
+        }
+
         mEbookListAdapter = new ReadableEbookListAdapter(Ebooklist.this, ebooks, readyForDelete);
-        listView.setAdapter(mEbookListAdapter);
+        mEbookListView.setAdapter(mEbookListAdapter);
 
         //onClickListener in ebook listView
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mEbookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 

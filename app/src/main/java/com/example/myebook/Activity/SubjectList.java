@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.myebook.BuildConfig;
@@ -25,6 +26,8 @@ import java.io.File;
 public class SubjectList extends AppCompatActivity {
     private static final String TAG = "SubjectList";
 
+    private ListView mSubjectListView;
+    private LinearLayout mEmptyMessage;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
@@ -57,7 +60,8 @@ public class SubjectList extends AppCompatActivity {
 
     private void loadSubjectIntoListView() {
 
-        ListView mSubjectListView = (ListView) findViewById(R.id.listViewSubject);
+        mSubjectListView = (ListView) findViewById(R.id.listViewSubject);
+        mEmptyMessage = (LinearLayout) findViewById(R.id.emptyMessageSubject);
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/");
@@ -68,8 +72,18 @@ public class SubjectList extends AppCompatActivity {
         String[] folders = folder.list();
 //        Log.d(TAG, "loadIntoListView: " + folders);
 
-        //the adapter to load data into list
+
+        //showing empty message while folders array is empty
         assert folders != null;
+        if(folders.length == 0) {
+            mEmptyMessage.setVisibility(View.VISIBLE);
+            mSubjectListView.setVisibility(View.GONE);
+        } else {
+            mSubjectListView.setVisibility(View.VISIBLE);
+            mEmptyMessage.setVisibility(View.GONE);
+        }
+
+        //the adapter to load data into list
         mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, folders, readyForDelete);
         //attaching adapter to mGridView
         mSubjectListView.setAdapter(mSubjectListAdapter);
