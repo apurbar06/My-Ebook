@@ -98,26 +98,60 @@ public class Ebooklist extends AppCompatActivity {
                 File file = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject + "/" + clickedEbook);
                 Log.d(TAG, "onItemClick: " + file);
 
-                //extracting the extension like pdf/ppt/pptx
-                String last3 = ((clickedEbook == null) || (clickedEbook.length() < 3)) ? clickedEbook : clickedEbook.substring(clickedEbook.length() - 3);
-                String last4 = ((clickedEbook == null) || (clickedEbook.length() < 4)) ? clickedEbook: clickedEbook.substring(clickedEbook.length() - 4);
 
+                Uri uri = Uri.fromFile(file);
 
-                Intent target = new Intent(Intent.ACTION_VIEW);
-                //set type pdf/ppt if the file is an pdf/ppt file
-                if(last3.equals("pdf")) {
-                    target.setDataAndType(Uri.fromFile(file), "application/pdf");
-                } else if(last3.equals("ppt") || last4.equals("pptx")) {
-                    target.setDataAndType(Uri.fromFile(file), "application/vnd.ms-powerpoint");
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                // Checking what kind of file user is trying to open, by comparing the file with extensions.
+                // When the if condition is matched, plugin sets the correct intent (mime) type,
+                // so Android knew what application to use to open the file
+                if (file.toString().contains(".doc") || file.toString().contains(".docx")) {
+                    // Word document
+                    intent.setDataAndType(uri, "application/msword");
+                } else if(file.toString().contains(".pdf")) {
+                    // PDF file
+                    intent.setDataAndType(uri, "application/pdf");
+                } else if(file.toString().contains(".ppt") || file.toString().contains(".pptx")) {
+                    // Powerpoint file
+                    intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
+                } else if(file.toString().contains(".xls") || file.toString().contains(".xlsx")) {
+                    // Excel file
+                    intent.setDataAndType(uri, "application/vnd.ms-excel");
+                } else if(file.toString().contains(".zip") || file.toString().contains(".rar")) {
+                    // WAV audio file
+                    intent.setDataAndType(uri, "application/x-wav");
+                } else if(file.toString().contains(".rtf")) {
+                    // RTF file
+                    intent.setDataAndType(uri, "application/rtf");
+                } else if(file.toString().contains(".wav") || file.toString().contains(".mp3")) {
+                    // WAV audio file
+                    intent.setDataAndType(uri, "audio/x-wav");
+                } else if(file.toString().contains(".gif")) {
+                    // GIF file
+                    intent.setDataAndType(uri, "image/gif");
+                } else if(file.toString().contains(".jpg") || file.toString().contains(".jpeg") || file.toString().contains(".png")) {
+                    // JPG file
+                    intent.setDataAndType(uri, "image/jpeg");
+                } else if(file.toString().contains(".txt")) {
+                    // Text file
+                    intent.setDataAndType(uri, "text/plain");
+                } else if(file.toString().contains(".3gp") || file.toString().contains(".mpg") || file.toString().contains(".mpeg") || file.toString().contains(".mpe") || file.toString().contains(".mp4") || file.toString().contains(".avi")) {
+                    // Video files
+                    intent.setDataAndType(uri, "video/*");
+                } else {
+                    //additionally use else clause below, to manage other unknown extensions
+                    //in this case, Android will show all applications installed on the device
+                    //so you user choose which application to use
+                    intent.setDataAndType(uri, "*/*");
                 }
-                target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                Intent intent = Intent.createChooser(target, "Open File");
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     runOnUiThread(new Runnable(){
                         public void run() {
-                            Toast.makeText(Ebooklist.this, "Reader not found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Ebooklist.this, "Application to open this file is not found", Toast.LENGTH_LONG).show();
                         }
                     });
                 }
