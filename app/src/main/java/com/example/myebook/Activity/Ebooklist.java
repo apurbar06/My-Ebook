@@ -1,9 +1,5 @@
 package com.example.myebook.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -21,22 +17,26 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.myebook.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.example.myebook.Adapter.ReadableEbookListAdapter;
+import com.example.myebook.R;
 
 import java.io.File;
 
 public class Ebooklist extends AppCompatActivity {
     private static final String TAG = "Ebooklist";
-
+    ReadableEbookListAdapter mEbookListAdapter;
     private ListView mEbookListView;
     private LinearLayout mEmptyMessage;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    private  String mClickedSubject;
+    private String mClickedSubject;
     private String[] mEbooks;
-    ReadableEbookListAdapter mEbookListAdapter;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private boolean readyForDelete = false;
@@ -67,13 +67,13 @@ public class Ebooklist extends AppCompatActivity {
     private void loadEbookIntoListView() {
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject);
+        File folder = new File(extStorageDirectory, "MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject);
         mEbooks = folder.list();//getting the list of files in selectedSubject in string array
 
 
         //showing empty message while ebooks array is empty
         assert mEbooks != null;
-        if(mEbooks.length == 0) {
+        if (mEbooks.length == 0) {
             mEmptyMessage.setVisibility(View.VISIBLE);
             mEbookListView.setVisibility(View.GONE);
         } else {
@@ -95,11 +95,19 @@ public class Ebooklist extends AppCompatActivity {
                 String clickedEbook = (String) ReadableEbookListAdapter.getItemAtPosition(position);
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                File file = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject + "/" + clickedEbook);
+                File file = new File(extStorageDirectory, "MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + clickedEbook);
                 Log.d(TAG, "onItemClick: " + file);
 
 
-                Uri uri = Uri.fromFile(file);
+//                Uri uri = Uri.fromFile(file);
+                // If your targetSdkVersion >= 24, then we have to use FileProvider class to give access to
+                // the particular file or folder to make them accessible for other apps. We create our own
+                // class inheriting FileProvider in order to make sure our FileProvider doesn't conflict with
+                // FileProviders declared in imported dependencies
+                Uri uri = FileProvider.getUriForFile(
+                        Ebooklist.this,
+                        getApplicationContext()
+                                .getPackageName() + ".provider", file);
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 // Checking what kind of file user is trying to open, by comparing the file with extensions.
@@ -108,34 +116,34 @@ public class Ebooklist extends AppCompatActivity {
                 if (file.toString().contains(".doc") || file.toString().contains(".docx")) {
                     // Word document
                     intent.setDataAndType(uri, "application/msword");
-                } else if(file.toString().contains(".pdf")) {
+                } else if (file.toString().contains(".pdf")) {
                     // PDF file
                     intent.setDataAndType(uri, "application/pdf");
-                } else if(file.toString().contains(".ppt") || file.toString().contains(".pptx")) {
+                } else if (file.toString().contains(".ppt") || file.toString().contains(".pptx")) {
                     // Powerpoint file
                     intent.setDataAndType(uri, "application/vnd.ms-powerpoint");
-                } else if(file.toString().contains(".xls") || file.toString().contains(".xlsx")) {
+                } else if (file.toString().contains(".xls") || file.toString().contains(".xlsx")) {
                     // Excel file
                     intent.setDataAndType(uri, "application/vnd.ms-excel");
-                } else if(file.toString().contains(".zip") || file.toString().contains(".rar")) {
+                } else if (file.toString().contains(".zip") || file.toString().contains(".rar")) {
                     // WAV audio file
                     intent.setDataAndType(uri, "application/x-wav");
-                } else if(file.toString().contains(".rtf")) {
+                } else if (file.toString().contains(".rtf")) {
                     // RTF file
                     intent.setDataAndType(uri, "application/rtf");
-                } else if(file.toString().contains(".wav") || file.toString().contains(".mp3")) {
+                } else if (file.toString().contains(".wav") || file.toString().contains(".mp3")) {
                     // WAV audio file
                     intent.setDataAndType(uri, "audio/x-wav");
-                } else if(file.toString().contains(".gif")) {
+                } else if (file.toString().contains(".gif")) {
                     // GIF file
                     intent.setDataAndType(uri, "image/gif");
-                } else if(file.toString().contains(".jpg") || file.toString().contains(".jpeg") || file.toString().contains(".png")) {
+                } else if (file.toString().contains(".jpg") || file.toString().contains(".jpeg") || file.toString().contains(".png")) {
                     // JPG file
                     intent.setDataAndType(uri, "image/jpeg");
-                } else if(file.toString().contains(".txt")) {
+                } else if (file.toString().contains(".txt")) {
                     // Text file
                     intent.setDataAndType(uri, "text/plain");
-                } else if(file.toString().contains(".3gp") || file.toString().contains(".mpg") || file.toString().contains(".mpeg") || file.toString().contains(".mpe") || file.toString().contains(".mp4") || file.toString().contains(".avi")) {
+                } else if (file.toString().contains(".3gp") || file.toString().contains(".mpg") || file.toString().contains(".mpeg") || file.toString().contains(".mpe") || file.toString().contains(".mp4") || file.toString().contains(".avi")) {
                     // Video files
                     intent.setDataAndType(uri, "video/*");
                 } else {
@@ -144,16 +152,19 @@ public class Ebooklist extends AppCompatActivity {
                     //so you user choose which application to use
                     intent.setDataAndType(uri, "*/*");
                 }
-
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    runOnUiThread(new Runnable(){
+                    runOnUiThread(new Runnable() {
                         public void run() {
+                            Log.d(TAG, "run: Application to open this file is not found");
                             Toast.makeText(Ebooklist.this, "Application to open this file is not found", Toast.LENGTH_LONG).show();
                         }
                     });
+                } catch (Exception ex) {
+                    Log.d(TAG, "onItemClick: ex");
                 }
             }
         });
@@ -175,6 +186,7 @@ public class Ebooklist extends AppCompatActivity {
 
     /**
      * this method is called when the user click the three dot icon
+     *
      * @param menu menu
      * @return boolean
      */
@@ -182,7 +194,7 @@ public class Ebooklist extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
-        if(mEbooks.length == 0) {
+        if (mEbooks.length == 0) {
             delete.setVisible(false);
             mark.setVisible(false);
         } else {
@@ -219,14 +231,13 @@ public class Ebooklist extends AppCompatActivity {
     }
 
 
-
     private void deleteCheckedEbooks() {
 
-        for(int i = 0; i< mEbookListAdapter.mCheckBoxState.length ; i++) {
+        for (int i = 0; i < mEbookListAdapter.mCheckBoxState.length; i++) {
             if (mEbookListAdapter.mCheckBoxState[i] == true) {
                 Log.d(TAG, "deleteCheckedItems: " + ReadableEbookListAdapter.getItemAtPosition(i));
                 String ebookToDelete = ReadableEbookListAdapter.getItemAtPosition(i);
-                File file = new File(Environment.getExternalStorageDirectory() + "/MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ mClickedSubject +"/"+ ebookToDelete);
+                File file = new File(Environment.getExternalStorageDirectory() + "/MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + ebookToDelete);
 
 //                //to delete a particular diretory first files in that directory should be deleted
 //                if (dir.isDirectory()) {

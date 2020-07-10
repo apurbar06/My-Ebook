@@ -16,6 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+<!--            If your targetSdkVersion >= 24, then we have to use FileProvider class to give access to
+                the particular file or folder to make them accessible for other apps. We create our own
+                class inheriting FileProvider in order to make sure our FileProvider doesn't conflict with
+                FileProviders declared in imported dependencies
+-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <receiver android:name=".BroadcastReceiver.NotificationActionReceiver"
                   android:exported="true">
             <intent-filter>
