@@ -111,9 +111,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
     };
 
 
-    /**
-     * This will execute after every click on download button
-     */
+
 
 
 

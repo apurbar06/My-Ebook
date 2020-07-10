@@ -102,7 +102,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         String fileName = strings[2];  // pdf file name
         builder.setContentTitle(fileName);
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "My Ebook/" + fileFolder);
+        File folder = new File(extStorageDirectory, "MyEbook/" + fileFolder);
         if(!folder.exists()){
             folder.mkdirs();
         }

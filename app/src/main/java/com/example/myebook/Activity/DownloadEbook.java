@@ -33,7 +33,7 @@ public class DownloadEbook extends AppCompatActivity {
     private static final String TAG = "DownloadEbook";
     ListView mListView;
     LinearLayout mLinLaHeaderProgress;
-    String mJsonString;
+    LinearLayout mEmptyMessage;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
@@ -48,6 +48,7 @@ public class DownloadEbook extends AppCompatActivity {
         setContentView(R.layout.activity_download_ebook);
         mListView = (ListView) findViewById(R.id.listView);
         mLinLaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+        mEmptyMessage = (LinearLayout) findViewById(R.id.emptyMessageDownload);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -66,8 +67,9 @@ public class DownloadEbook extends AppCompatActivity {
 
         // SHOW THE SPINNER WHILE LOADING FEEDS
         mLinLaHeaderProgress.setVisibility(View.VISIBLE);
-        // HIDE THE LISTVIEW WHILE LOADING FEEDS
+        // HIDE THE LISTVIEW AND EMPTY MESSAGE WHILE LOADING FEEDS
         mListView.setVisibility(View.GONE);
+        mEmptyMessage.setVisibility(View.GONE);
         db.collection(mGraduationLevel).document(mCourse).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -80,8 +82,9 @@ public class DownloadEbook extends AppCompatActivity {
                             Log.d(TAG, "onComplete: " + mSemesterMap);
                             loadIntoListView();
                         } catch (Exception e) {
-                            // HIDE THE SPINNER
+                            // HIDE THE SPINNER AND EMPTY MESSAGE
                             mLinLaHeaderProgress.setVisibility(View.GONE);
+                            mEmptyMessage.setVisibility(View.GONE);
                             // SHOW THE LISTVIEW
                             mListView.setVisibility(View.VISIBLE);
                             runOnUiThread(new Runnable(){
@@ -92,19 +95,16 @@ public class DownloadEbook extends AppCompatActivity {
                         }
 
                     } else {
-                        // HIDE THE SPINNER
+                        // HIDE THE SPINNER AND LISTVIEW
                         mLinLaHeaderProgress.setVisibility(View.GONE);
-                        // SHOW THE LISTVIEW
-                        mListView.setVisibility(View.VISIBLE);
-                        runOnUiThread(new Runnable(){
-                            public void run() {
-                                Toast.makeText(DownloadEbook.this, "Currently unavailable", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                        mListView.setVisibility(View.GONE);
+                        // SHOW THE EMPTY MESSAGE
+                        mEmptyMessage.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    // HIDE THE SPINNER
+                    // HIDE THE SPINNER AND EMPTY MESSAGE
                     mLinLaHeaderProgress.setVisibility(View.GONE);
+                    mEmptyMessage.setVisibility(View.GONE);
                     // SHOW THE LISTVIEW
                     mListView.setVisibility(View.VISIBLE);
                     runOnUiThread(new Runnable(){
@@ -171,10 +171,20 @@ public class DownloadEbook extends AppCompatActivity {
 
         String[] subjects = subjectList.toArray(new String[subjectList.size()]);
 
-        // HIDE THE SPINNER AFTER LOADING FEEDS
-        mLinLaHeaderProgress.setVisibility(View.GONE);
-        // SHOW THE LISTVIEW AFTER LOADING FEEDS
-        mListView.setVisibility(View.VISIBLE);
+        //showing empty message while subjects array is empty
+        if(subjects.length == 0) {
+            // HIDE THE SPINNER AND LISTVIEW
+            mLinLaHeaderProgress.setVisibility(View.GONE);
+            mListView.setVisibility(View.GONE);
+            // SHOW THE EMPTY MESSAGE
+            mEmptyMessage.setVisibility(View.VISIBLE);
+        } else {
+            // HIDE THE SPINNER AND EMPTY MESSAGE
+            mLinLaHeaderProgress.setVisibility(View.GONE);
+            mEmptyMessage.setVisibility(View.GONE);
+            // SHOW THE LISTVIEW
+            mListView.setVisibility(View.VISIBLE);
+        }
 
         //the array adapter to load data into list
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, subjects);
@@ -214,6 +224,22 @@ public class DownloadEbook extends AppCompatActivity {
 
                 String[] eBooks = eBooksList.toArray(new String[eBooksList.size()]);
                 String[] eBooksURL = eBooksURLList.toArray(new String[eBooksURLList.size()]);
+
+
+                //showing empty message while eBooks array is empty
+                if(eBooks.length == 0) {
+                    // HIDE THE SPINNER AND LISTVIEW
+                    mLinLaHeaderProgress.setVisibility(View.GONE);
+                    mListView.setVisibility(View.GONE);
+                    // SHOW THE EMPTY MESSAGE
+                    mEmptyMessage.setVisibility(View.VISIBLE);
+                } else {
+                    // HIDE THE SPINNER AND EMPTY MESSAGE
+                    mLinLaHeaderProgress.setVisibility(View.GONE);
+                    mEmptyMessage.setVisibility(View.GONE);
+                    // SHOW THE LISTVIEW
+                    mListView.setVisibility(View.VISIBLE);
+                }
 
 
                 //set the list view form where one can download ebook

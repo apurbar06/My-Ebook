@@ -35,15 +35,16 @@ public class Contribute extends AppCompatActivity {
     private String mFileName;
     private EditText mEditText;
     private TextView mTvAttachment;
-    private static final String[] mGraduationLevelArray = {"UG", "DD", "PG"};
-    private static final String[] mUgCourseArray = {"COE", "EDM", "MDM", "MSM"};
-    private static final String[] mDdCourseArray = {"CED", "EVD", "ESD", "MPD", "MFD"};
-    private static final String[] mPgCourseArray = {"CES", "EDS", "MDS", "SMT"};
-    private static final String[] mUgSemesterArray = {"First", "Second"};
-    private static final String[] mDdSemesterArray = {"First", "Second"};
-    private static final String[] mPgSemesterArray = {"First", "Second"};
     private Uri URI = null;
     private static final int PICK_FROM_STORAGE = 101;
+    private static final String[] mGraduationLevelArray = {"Undergraduate", "Dual Degree", "Postgraduate (M.Tech)"};
+    private static final String[] mUgCourseArray = {"COE", "EDM", "MDM", "MSM"};
+    private static final String[] mDdCourseArray = {"CED", "EVD", "ESD", "MPD", "MFD"};
+    private static final String[] mPgCourseArray = {"CDS", "EDS", "MDS", "SMT"};
+    private static final String[] mUgSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"};
+    private static final String[] mDdSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"};
+    private static final String[] mPgSemesterArray = {"First", "Second", "Third", "Fourth"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

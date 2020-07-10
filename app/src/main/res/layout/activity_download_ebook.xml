@@ -22,6 +22,28 @@
         </ProgressBar>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/emptyMessageDownload"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation = "vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_empty" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Currently unavailable"
+            android:textColor="#804F5159"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
 
     <!-- this is our listview where we will display the fetched data -->
     <ListView

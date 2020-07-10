@@ -35,6 +35,7 @@ public class Ebooklist extends AppCompatActivity {
     private String mCourse;
     private String mSemester;
     private  String mClickedSubject;
+    private String[] mEbooks;
     ReadableEbookListAdapter mEbookListAdapter;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -66,13 +67,13 @@ public class Ebooklist extends AppCompatActivity {
     private void loadEbookIntoListView() {
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject);
-        String[] ebooks = folder.list();//getting the list of files in selectedSubject in string array
+        File folder = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject);
+        mEbooks = folder.list();//getting the list of files in selectedSubject in string array
 
 
         //showing empty message while ebooks array is empty
-        assert ebooks != null;
-        if(ebooks.length == 0) {
+        assert mEbooks != null;
+        if(mEbooks.length == 0) {
             mEmptyMessage.setVisibility(View.VISIBLE);
             mEbookListView.setVisibility(View.GONE);
         } else {
@@ -80,7 +81,7 @@ public class Ebooklist extends AppCompatActivity {
             mEmptyMessage.setVisibility(View.GONE);
         }
 
-        mEbookListAdapter = new ReadableEbookListAdapter(Ebooklist.this, ebooks, readyForDelete);
+        mEbookListAdapter = new ReadableEbookListAdapter(Ebooklist.this, mEbooks, readyForDelete);
         mEbookListView.setAdapter(mEbookListAdapter);
 
         //onClickListener in ebook listView
@@ -94,7 +95,7 @@ public class Ebooklist extends AppCompatActivity {
                 String clickedEbook = (String) ReadableEbookListAdapter.getItemAtPosition(position);
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                File file = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject + "/" + clickedEbook);
+                File file = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/" + mClickedSubject + "/" + clickedEbook);
                 Log.d(TAG, "onItemClick: " + file);
 
                 //extracting the extension like pdf/ppt/pptx
@@ -147,13 +148,19 @@ public class Ebooklist extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
-        if (readyForDelete) {
-            mark.setTitle("Undo");
-            delete.setVisible(true);
-        } else {
-            mark.setTitle("Mark");
+        if(mEbooks.length == 0) {
             delete.setVisible(false);
+            mark.setVisible(false);
+        } else {
+            if (readyForDelete) {
+                mark.setTitle("Undo");
+                delete.setVisible(true);
+            } else {
+                mark.setTitle("Mark");
+                delete.setVisible(false);
+            }
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -185,7 +192,7 @@ public class Ebooklist extends AppCompatActivity {
             if (mEbookListAdapter.mCheckBoxState[i] == true) {
                 Log.d(TAG, "deleteCheckedItems: " + ReadableEbookListAdapter.getItemAtPosition(i));
                 String ebookToDelete = ReadableEbookListAdapter.getItemAtPosition(i);
-                File file = new File(Environment.getExternalStorageDirectory() + "/My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ mClickedSubject +"/"+ ebookToDelete);
+                File file = new File(Environment.getExternalStorageDirectory() + "/MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ mClickedSubject +"/"+ ebookToDelete);
 
 //                //to delete a particular diretory first files in that directory should be deleted
 //                if (dir.isDirectory()) {

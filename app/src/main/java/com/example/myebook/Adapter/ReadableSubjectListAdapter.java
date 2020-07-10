@@ -24,7 +24,7 @@ public class ReadableSubjectListAdapter extends BaseAdapter {
         mContext = context;
         mSubjects = subjects;
         mForDelete = forDelete;
-        mCheckBoxState= new boolean[subjects.length];
+        mCheckBoxState = new boolean[subjects.length];
     }
 
     public static String getItemAtPosition(int position) {

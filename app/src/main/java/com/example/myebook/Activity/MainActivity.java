@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "My Ebook");
+        File folder = new File(extStorageDirectory, "MyEbook");
         if(!folder.exists()){
             folder.mkdirs();
         }

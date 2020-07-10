@@ -31,6 +31,7 @@ public class SubjectList extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
+    String[] mSubjects;
     private  String mClickedSubject;
     private ReadableSubjectListAdapter mSubjectListAdapter;
     private SharedPreferences mSharedPreferences;
@@ -44,7 +45,7 @@ public class SubjectList extends AppCompatActivity {
         setContentView(R.layout.activity_subject_list);
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "My Ebook");
+        File folder = new File(extStorageDirectory, "MyEbook");
         if(!folder.exists()){
             folder.mkdirs();
         }
@@ -64,18 +65,17 @@ public class SubjectList extends AppCompatActivity {
         mEmptyMessage = (LinearLayout) findViewById(R.id.emptyMessageSubject);
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/");
+        File folder = new File(extStorageDirectory, "MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/");
         if(!folder.exists()){
             folder.mkdirs();
         }
         //getting the list of files in folder in string array
-        String[] folders = folder.list();
-//        Log.d(TAG, "loadIntoListView: " + folders);
+        mSubjects = folder.list();
 
 
         //showing empty message while folders array is empty
-        assert folders != null;
-        if(folders.length == 0) {
+        assert mSubjects != null;
+        if(mSubjects.length == 0) {
             mEmptyMessage.setVisibility(View.VISIBLE);
             mSubjectListView.setVisibility(View.GONE);
         } else {
@@ -84,7 +84,7 @@ public class SubjectList extends AppCompatActivity {
         }
 
         //the adapter to load data into list
-        mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, folders, readyForDelete);
+        mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, mSubjects, readyForDelete);
         //attaching adapter to mGridView
         mSubjectListView.setAdapter(mSubjectListAdapter);
 
@@ -137,19 +137,28 @@ public class SubjectList extends AppCompatActivity {
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
         MenuItem setup = menu.findItem(R.id.setup);
-        if (readyForDelete) {
-            mark.setTitle("Undo");
-            delete.setVisible(true);
-            contribute.setVisible(false);
-            download.setVisible(false);
-            setup.setVisible(false);
-        } else {
-            mark.setTitle("Mark");
+        if(mSubjects.length == 0) {
+            mark.setVisible(false);
             delete.setVisible(false);
             contribute.setVisible(true);
             download.setVisible(true);
             setup.setVisible(true);
+        } else {
+            if (readyForDelete) {
+                mark.setTitle("Undo");
+                delete.setVisible(true);
+                contribute.setVisible(false);
+                download.setVisible(false);
+                setup.setVisible(false);
+            } else {
+                mark.setTitle("Mark");
+                delete.setVisible(false);
+                contribute.setVisible(true);
+                download.setVisible(true);
+                setup.setVisible(true);
+            }
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -212,7 +221,7 @@ public class SubjectList extends AppCompatActivity {
             if (mSubjectListAdapter.mCheckBoxState[i] == true) {
                 Log.d(TAG, "deleteCheckedItems: " + ReadableSubjectListAdapter.getItemAtPosition(i));
                 String subjectToDelete = ReadableSubjectListAdapter.getItemAtPosition(i);
-                File dir = new File(Environment.getExternalStorageDirectory() + "/My Ebook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ subjectToDelete);
+                File dir = new File(Environment.getExternalStorageDirectory() + "/MyEbook/"+ mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ subjectToDelete);
 
                 //to delete a particular diretory first files in that directory should be deleted
                 if (dir.isDirectory()) {
