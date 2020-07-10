@@ -1,4 +1,4 @@
-package com.example.myebook;
+package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.myebook.handler.ReadableSubjectListAdapter;
+import com.example.myebook.BuildConfig;
+import com.example.myebook.R;
+import com.example.myebook.Adapter.ReadableSubjectListAdapter;
 
 import java.io.File;
 
@@ -37,6 +39,12 @@ public class SubjectList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subject_list);
+
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+        File folder = new File(extStorageDirectory, "My Ebook");
+        if(!folder.exists()){
+            folder.mkdirs();
+        }
 
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         mGraduationLevel = mSharedPreferences.getString("GraduationLevel", null);
@@ -174,7 +182,7 @@ public class SubjectList extends AppCompatActivity {
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My Ebook");
             String shareMessage= "\nLet me recommend you this application\n\n";
-            shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
+            shareMessage = shareMessage + "Now the link is not available. It will be available soon." + BuildConfig.APPLICATION_ID +"\n\n";
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
             startActivity(Intent.createChooser(shareIntent, "Choose one"));
         } catch(Exception e) {

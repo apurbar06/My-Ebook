@@ -16,16 +16,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Ebooklist"></activity>
-        <activity android:name=".SubjectList" />
+        <receiver android:name=".BroadcastReceiver.NotificationActionReceiver"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="PAUSE" > </action>
+                <action android:name="CANCEL" > </action>
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".Activity.Ebooklist"></activity>
+        <activity android:name=".Activity.SubjectList" />
         <activity
-            android:name=".Contribute"
+            android:name=".Activity.Contribute"
             android:label="Contribute"></activity>
-<!--        <activity android:name=".ReadEbook" />-->
         <activity
-            android:name=".DownloadEbook"
+            android:name=".Activity.DownloadEbook"
             android:label="Download" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

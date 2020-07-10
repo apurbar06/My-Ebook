@@ -1,6 +1,5 @@
-package com.example.myebook;
+package com.example.myebook.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
+import com.example.myebook.R;
 
 public class Contribute extends AppCompatActivity {
 
@@ -209,7 +208,7 @@ public class Contribute extends AppCompatActivity {
             String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nFile Name : "+ mFileName;
             final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
             emailIntent.setType("plain/text");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"apurbar06@gmail.com"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Contribution to My Ebook.");
             if (URI != null) {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, URI);

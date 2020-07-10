@@ -1,4 +1,4 @@
-package com.example.myebook;
+package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -20,7 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.myebook.handler.ReadableEbookListAdapter;
+import com.example.myebook.R;
+import com.example.myebook.Adapter.ReadableEbookListAdapter;
 
 import java.io.File;
 
@@ -101,7 +102,7 @@ public class Ebooklist extends AppCompatActivity {
                 } catch (ActivityNotFoundException e) {
                     runOnUiThread(new Runnable(){
                         public void run() {
-                            Toast.makeText(Ebooklist.this, "Please install a pdf reader", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Ebooklist.this, "Reader not found", Toast.LENGTH_LONG).show();
                         }
                     });
                 }

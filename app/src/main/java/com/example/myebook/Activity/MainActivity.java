@@ -1,4 +1,4 @@
-package com.example.myebook;
+package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.myebook.R;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    private static final String[] mGraduationLevelArray = {"UG", "DD", "PG"};
+    private static final String[] mGraduationLevelArray = {"Undergraduate", "Dual Degree", "Postgraduate (M.Tech)"};
     private static final String[] mUgCourseArray = {"COE", "EDM", "MDM", "MSM"};
     private static final String[] mDdCourseArray = {"CED", "EVD", "ESD", "MPD", "MFD"};
-    private static final String[] mPgCourseArray = {"CES", "EDS", "MDS", "SMT"};
-    private static final String[] mUgSemesterArray = {"First", "Second"};
-    private static final String[] mDdSemesterArray = {"First", "Second"};
-    private static final String[] mPgSemesterArray = {"First", "Second"};
+    private static final String[] mPgCourseArray = {"CDS", "EDS", "MDS", "SMT"};
+    private static final String[] mUgSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"};
+    private static final String[] mDdSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"};
+    private static final String[] mPgSemesterArray = {"First", "Second", "Third", "Fourth"};
 
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;

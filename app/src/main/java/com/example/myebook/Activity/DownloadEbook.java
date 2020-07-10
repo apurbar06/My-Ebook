@@ -1,4 +1,4 @@
-package com.example.myebook;
+package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -17,13 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.myebook.handler.DownloadableEbookListAdapter;
+import com.example.myebook.R;
+import com.example.myebook.Adapter.DownloadableEbookListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +75,21 @@ public class DownloadEbook extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
-                        mSemesterMap = document.getData();
-                        loadIntoListView();
+                        try {
+                            mSemesterMap = document.getData();
+                            Log.d(TAG, "onComplete: " + mSemesterMap);
+                            loadIntoListView();
+                        } catch (Exception e) {
+                            // HIDE THE SPINNER
+                            mLinLaHeaderProgress.setVisibility(View.GONE);
+                            // SHOW THE LISTVIEW
+                            mListView.setVisibility(View.VISIBLE);
+                            runOnUiThread(new Runnable(){
+                                public void run() {
+                                    Toast.makeText(DownloadEbook.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
 
                     } else {
                         // HIDE THE SPINNER
@@ -144,29 +156,20 @@ public class DownloadEbook extends AppCompatActivity {
 
     private void loadIntoListView() {
 
-        String[] subjects = new String[mSemesterMap.size()];
+        List<String> subjectList = new ArrayList<String>();
 
         //getting subjects
         for (Map.Entry<String, Object> semester : mSemesterMap.entrySet()) {
             if (semester.getKey().equals(mSemester)) {
                 Map<String, Object> subjectMap = (Map<String, Object>) semester.getValue();
-                int j = 0;
-                for (Map.Entry<String, Object> subject : subjectMap.entrySet()) {
-                    subjects[j] = subject.getKey();
-                    Log.d(TAG, "loadIntoListView: " + subjects[j]);
-                    j++;
+                for (Map.Entry<String, Object> dataEntry : subjectMap.entrySet()) {
+                    subjectList.add(dataEntry.getKey());
                 }
             }
         }
 
-        //removing all null values from subjects
-        List<String> list = new ArrayList<String>();
-        for(String s : subjects) {
-            if(s != null && s.length() > 0) {
-                list.add(s);
-            }
-        }
-        subjects = list.toArray(new String[list.size()]);
+
+        String[] subjects = subjectList.toArray(new String[subjectList.size()]);
 
         // HIDE THE SPINNER AFTER LOADING FEEDS
         mLinLaHeaderProgress.setVisibility(View.GONE);
@@ -187,8 +190,8 @@ public class DownloadEbook extends AppCompatActivity {
                 //extracting the selected subject
                 String selectedSubject = (String) mListView.getItemAtPosition(position);
 
-                String[] eBooks = new String[mSemesterMap.size()];
-                String[] eBooksURL = new String[mSemesterMap.size()];
+                List<String> eBooksList = new ArrayList<String>();
+                List<String> eBooksURLList = new ArrayList<String>();
 
                 PointerIsAtFinishingStage = true;
 
@@ -199,35 +202,18 @@ public class DownloadEbook extends AppCompatActivity {
                         for (Map.Entry<String, Object> subject : subjectMap.entrySet()) {
                             if (subject.getKey().equals(selectedSubject)) {
                                 Map<String, Object> eBookMap = (Map<String, Object>) subject.getValue();
-                                int i = 0;
                                 for (Map.Entry<String, Object> dataEntry : eBookMap.entrySet()) {
-                                    eBooks[i] = dataEntry.getKey();
-                                    eBooksURL[i] = dataEntry.getValue().toString();
-                                    Log.d(TAG, "onItemClick: ebook : " + eBooks[i]+ "  url : " + eBooksURL[i]);
-                                    i++;
+                                    eBooksList.add(dataEntry.getKey());
+                                    eBooksURLList.add(dataEntry.getValue().toString());
                                 }
                             }
                         }
                     }
                 }
 
-                //removing all null values from eBooks
-                List<String> list = new ArrayList<String>();
-                for(String s : eBooks) {
-                    if(s != null && s.length() > 0) {
-                        list.add(s);
-                    }
-                }
-                eBooks = list.toArray(new String[list.size()]);
 
-                //removing all null values from eBooksURL
-                List<String> list1 = new ArrayList<String>();
-                for(String s : eBooksURL) {
-                    if(s != null && s.length() > 0) {
-                        list1.add(s);
-                    }
-                }
-                eBooksURL = list1.toArray(new String[list1.size()]);
+                String[] eBooks = eBooksList.toArray(new String[eBooksList.size()]);
+                String[] eBooksURL = eBooksURLList.toArray(new String[eBooksURLList.size()]);
 
 
                 //set the list view form where one can download ebook
