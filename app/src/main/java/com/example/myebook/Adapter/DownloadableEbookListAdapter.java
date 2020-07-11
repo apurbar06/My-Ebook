@@ -2,13 +2,8 @@ package com.example.myebook.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,34 +12,20 @@ import android.view.animation.AlphaAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.myebook.Handler.Downloader;
 import com.example.myebook.R;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
 
-
-public class DownloadableEbookListAdapter extends BaseAdapter{
+public class DownloadableEbookListAdapter extends BaseAdapter {
 
     private static final String TAG = "DownloadableEbookListAdapter";
     private final Activity mContext;
     private final String mSubject;
     private final String[] mTitle;
     private final String[] mURL;
+    public Downloader d;
     private AlphaAnimation buttonClicked = new AlphaAnimation(0.2f, 1.0f);
-
 
     public DownloadableEbookListAdapter(Activity context, String subject, String[] title, String[] url) {
 
@@ -101,22 +82,19 @@ public class DownloadableEbookListAdapter extends BaseAdapter{
                 v.startAnimation(buttonClicked);
 
                 //download pdf using new thread
-                new Downloader(mContext).executeOnExecutor( AsyncTask.THREAD_POOL_EXECUTOR,  mURL[position], mSubject, mTitle[position]);
+                d = new Downloader(mContext);
+                d.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mURL[position], mSubject, mTitle[position]);
 
             }
         });
 
         return view;
 
-    };
+    }
 
-
-
-
-
-
-
-
+    boolean cancel(){
+        return d.cancel(true);
+    }
 
 
 }

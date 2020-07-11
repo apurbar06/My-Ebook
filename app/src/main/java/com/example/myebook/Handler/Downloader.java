@@ -3,6 +3,7 @@ package com.example.myebook.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,40 +45,28 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
     }
 
 
-//    Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
-////        intentConfirm.setAction("CONFIRM");
-////        intentConfirm.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//
-//
-//    Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
-////        intentCancel.setAction("CANCEL");
-////        intentCancel.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//
-//    //This Intent will be called when Pause button from notification will be
-//    //clicked by user.
-//    PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//    //This Intent will be called when Cancel button from notification will be
-//    //clicked by user.
-//    PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//    NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
-//    NotificationCompat.Action act  ionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
-
-
 
     protected void onPreExecute(){
+        Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
+        Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
+
+        PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
+        NotificationCompat.Action actionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
+
+
+
         super.onPreExecute();
         notificationManager = NotificationManagerCompat.from(mContext);
         builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
         builder.setContentTitle("My Ebook")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.ic_e)
-                .setOngoing(true);
-//                .addAction(actionPause)
-//                .addAction(actionCancel);
+                .setOngoing(true)
+                .addAction(actionPause)
+                .addAction(actionCancel);
 //                    .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         // Issue the initial notification with zero progress
@@ -169,6 +158,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         builder.setProgress(0,0,false);
         notificationManager.notify(notificationId, builder.build());
     }
+
 
 }
 
