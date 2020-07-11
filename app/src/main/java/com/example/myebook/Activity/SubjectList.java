@@ -2,10 +2,13 @@ package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.myebook.BuildConfig;
+import com.example.myebook.Handler.RequestAppPermission;
 import com.example.myebook.R;
 import com.example.myebook.Adapter.ReadableSubjectListAdapter;
 
@@ -26,6 +30,7 @@ import java.io.File;
 public class SubjectList extends AppCompatActivity {
     private static final String TAG = "SubjectList";
 
+    int APP_PERMISSION_REQUEST_CODE = 123;
     private ListView mSubjectListView;
     private LinearLayout mEmptyMessage;
     private String mGraduationLevel;
@@ -44,6 +49,11 @@ public class SubjectList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subject_list);
 
+        //requesting permission from user to read and write external storage for API 23 or higher
+        RequestAppPermission request = new RequestAppPermission();
+        request.readWrite(SubjectList.this, APP_PERMISSION_REQUEST_CODE);
+
+
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDirectory, "MyEbook");
         if(!folder.exists()){
@@ -56,6 +66,7 @@ public class SubjectList extends AppCompatActivity {
         mSemester = mSharedPreferences.getString("Semester", null);
 
         loadSubjectIntoListView();
+
     }
 
 

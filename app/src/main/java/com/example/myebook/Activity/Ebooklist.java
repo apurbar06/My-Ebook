@@ -23,12 +23,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.myebook.Adapter.ReadableEbookListAdapter;
+import com.example.myebook.Handler.RequestAppPermission;
 import com.example.myebook.R;
 
 import java.io.File;
 
 public class Ebooklist extends AppCompatActivity {
     private static final String TAG = "Ebooklist";
+
+    int APP_PERMISSION_REQUEST_CODE = 123;
     ReadableEbookListAdapter mEbookListAdapter;
     private ListView mEbookListView;
     private LinearLayout mEmptyMessage;
@@ -45,6 +48,11 @@ public class Ebooklist extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ebook_list);
+
+        //requesting permission from user to read and write external storage for API 23 or higher
+        RequestAppPermission request = new RequestAppPermission();
+        request.readWrite(Ebooklist.this, APP_PERMISSION_REQUEST_CODE);
+
         //enable the home button
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);

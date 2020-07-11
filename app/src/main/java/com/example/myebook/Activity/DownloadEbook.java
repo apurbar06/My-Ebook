@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.myebook.Handler.RequestAppPermission;
 import com.example.myebook.R;
 import com.example.myebook.Adapter.DownloadableEbookListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +32,8 @@ import java.util.Map;
 public class DownloadEbook extends AppCompatActivity {
 
     private static final String TAG = "DownloadEbook";
+
+    int APP_PERMISSION_REQUEST_CODE = 123;
     ListView mListView;
     LinearLayout mLinLaHeaderProgress;
     LinearLayout mEmptyMessage;
@@ -49,6 +52,10 @@ public class DownloadEbook extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mLinLaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
         mEmptyMessage = (LinearLayout) findViewById(R.id.emptyMessageDownload);
+
+        //requesting permission from user to read and write external storage for API 23 or higher
+        RequestAppPermission request = new RequestAppPermission();
+        request.readWrite(DownloadEbook.this, APP_PERMISSION_REQUEST_CODE);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);

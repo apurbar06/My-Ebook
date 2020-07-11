@@ -51,11 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-        File folder = new File(extStorageDirectory, "MyEbook");
-        if(!folder.exists()){
-            folder.mkdirs();
-        }
 
         mSharedPreferences = this.getSharedPreferences("myEbook", Context.MODE_PRIVATE);
         String makeSetup = mSharedPreferences.getString("makeSetup", null); // getting String
@@ -229,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Intent intent = new Intent(MainActivity.this, SubjectList.class);
+        Intent intent = new Intent(MainActivity.this, DownloadEbook.class);
         startActivity(intent);
         this.finish();
     }
