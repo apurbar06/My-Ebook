@@ -1,14 +1,13 @@
 package com.example.myebook.Handler;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -25,14 +24,19 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 public class Downloader extends AsyncTask<String, Integer, Void> {
 
+    private static final String TAG = "Downloader";
     private Activity mContext;
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
+    private String mFileLocation;
     private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
     private NotificationManagerCompat notificationManager;
     private NotificationCompat.Builder builder;
     private static final String CHANNEL_ID = "id";
@@ -47,14 +51,14 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
 
     protected void onPreExecute(){
-        Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
-        Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
-
-        PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
-        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
-        NotificationCompat.Action actionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
+//        Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
+//        Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
+//
+//        PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+//        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//        NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
+//        NotificationCompat.Action actionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
 
 
 
@@ -64,9 +68,9 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         builder.setContentTitle("My Ebook")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.ic_e)
-                .setOngoing(true)
-                .addAction(actionPause)
-                .addAction(actionCancel);
+                .setOngoing(true);
+//                .addAction(actionPause)
+//                .addAction(actionCancel);
 //                    .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         // Issue the initial notification with zero progress
@@ -89,7 +93,10 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         String fileUrl = strings[0];   // the url for download the pdf
         String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
         String fileName = strings[2];  // pdf file name
+
         builder.setContentTitle(fileName);
+        mFileLocation = fileFolder +"/"+ fileName;
+
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDirectory, "MyEbook/" + fileFolder);
         if(!folder.exists()){
@@ -157,6 +164,10 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         // Removes the progress bar
         builder.setProgress(0,0,false);
         notificationManager.notify(notificationId, builder.build());
+
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string
+        mEditor.apply(); // apply changes
     }
 
 

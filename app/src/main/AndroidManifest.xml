@@ -31,19 +31,22 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <receiver android:name=".BroadcastReceiver.NotificationActionReceiver"
-                  android:exported="true">
+        <receiver
+            android:name=".BroadcastReceiver.NotificationActionReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="PAUSE" > </action>
                 <action android:name="CANCEL" > </action>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Activity.Ebooklist"></activity>
-        <activity android:name=".Activity.SubjectList" />
         <activity
-            android:name=".Activity.Contribute"
-            android:label="Contribute"></activity>
+            android:name=".Activity.Ebooklist" />
+        <activity
+            android:name=".Activity.SubjectList" />
+        <activity
+            android:name=".Activity.Upload"
+            android:label="Upload" />
         <activity
             android:name=".Activity.DownloadEbook"
             android:label="Download" />

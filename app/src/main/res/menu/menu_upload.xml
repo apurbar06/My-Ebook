@@ -5,9 +5,9 @@
     tools:context=".ReadEbook">
 
     <item
-        android:id="@+id/contribute"
+        android:id="@+id/upload"
         android:orderInCategory="100"
-        android:title="Contribute"
+        android:title="Upload"
         app:showAsAction="never" />
 
 </menu>

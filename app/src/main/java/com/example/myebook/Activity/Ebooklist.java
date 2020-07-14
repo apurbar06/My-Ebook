@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.myebook.Adapter.ReadableEbookListAdapter;
+import com.example.myebook.Handler.Downloader;
 import com.example.myebook.Handler.RequestAppPermission;
 import com.example.myebook.R;
 
@@ -78,9 +79,11 @@ public class Ebooklist extends AppCompatActivity {
         File folder = new File(extStorageDirectory, "MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject);
         mEbooks = folder.list();//getting the list of files in selectedSubject in string array
 
+        if(mEbooks == null) {
+            mEbooks = new String[]{""};
+        }
 
         //showing empty message while ebooks array is empty
-        assert mEbooks != null;
         if (mEbooks.length == 0) {
             mEmptyMessage.setVisibility(View.VISIBLE);
             mEbookListView.setVisibility(View.GONE);
@@ -104,6 +107,7 @@ public class Ebooklist extends AppCompatActivity {
 
                 String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
                 File file = new File(extStorageDirectory, "MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + clickedEbook);
+                String fileLocation = mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + clickedEbook;
                 Log.d(TAG, "onItemClick: " + file);
 
 
@@ -163,7 +167,13 @@ public class Ebooklist extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
-                    startActivity(intent);
+                    //This if part will execute when the download will be completed
+                    if(mSharedPreferences.getString(fileLocation, "DownloadIncomplete").equals("DownloadCompleted")) {
+
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(Ebooklist.this, "Download is not completed", Toast.LENGTH_LONG).show();
+                    }
                 } catch (ActivityNotFoundException e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -247,14 +257,10 @@ public class Ebooklist extends AppCompatActivity {
                 String ebookToDelete = ReadableEbookListAdapter.getItemAtPosition(i);
                 File file = new File(Environment.getExternalStorageDirectory() + "/MyEbook/" + mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + ebookToDelete);
 
-//                //to delete a particular diretory first files in that directory should be deleted
-//                if (dir.isDirectory()) {
-//                    String[] children = dir.list();
-//                    for (int j = 0; j < children.length; j++)
-//                    {
-//                        new File(dir, children[j]).delete();
-//                    }
-//                }
+                String fileLocation =  mGraduationLevel + "/" + mCourse + "/" + mSemester + "/" + mClickedSubject + "/" + ebookToDelete;
+                mSharedPreferences.edit().remove(fileLocation).apply();
+
+
                 file.delete();
             }
         }

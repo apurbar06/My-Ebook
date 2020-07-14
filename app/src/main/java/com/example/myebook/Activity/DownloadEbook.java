@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.myebook.Handler.RequestAppPermission;
@@ -42,7 +43,7 @@ public class DownloadEbook extends AppCompatActivity {
     private String mSemester;
     private SharedPreferences mSharedPreferences;
     private boolean PointerIsAtFinishingStage = false;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Map<String, Object> mSemesterMap;
 
     @Override

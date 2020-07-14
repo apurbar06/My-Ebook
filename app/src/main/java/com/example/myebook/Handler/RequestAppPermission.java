@@ -22,14 +22,8 @@ public class RequestAppPermission {
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     }, requestCode);
-        } else {
-
-//                Toast.makeText(context,
-//                        "Permission already granted",
-//                        Toast.LENGTH_SHORT)
-//                        .show();
-
         }
+
 
     }
 

@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myebook.R;
 
-public class Contribute extends AppCompatActivity {
+public class Upload extends AppCompatActivity {
 
-    private static final String TAG = "Contribute";
+    private static final String TAG = "Upload";
     private Spinner mSpinnerGraduationLevel;
     private Spinner mSpinnerCourse;
     private Spinner mSpinnerSemester;
@@ -49,7 +49,7 @@ public class Contribute extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contribute);
+        setContentView(R.layout.activity_upload);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -58,14 +58,14 @@ public class Contribute extends AppCompatActivity {
         mSpinnerCourse = (Spinner)findViewById(R.id.cnb_spinner_course);
         mSpinnerSemester = (Spinner)findViewById(R.id.cnb_spinner_semester);
         mEditText = (EditText) findViewById(R.id.cnb_file_name);
-        mTvAttachment = (TextView) findViewById(R.id.tv_attachment);
+        mTvAttachment = findViewById(R.id.tv_attachment);
 
 
 
         /**
          * This part will deal with the spinners and extract data from spinners
          */
-        ArrayAdapter<String> adapterGL = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mGraduationLevelArray);
+        ArrayAdapter<String> adapterGL = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mGraduationLevelArray);
         adapterGL.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerGraduationLevel.setAdapter(adapterGL);
         mSpinnerGraduationLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -77,19 +77,19 @@ public class Contribute extends AppCompatActivity {
 
                 if (mSpinnerGraduationLevelPos == 0) {
 
-                    ArrayAdapter<String>adapter1 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mUgCourseArray);
+                    ArrayAdapter<String>adapter1 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mUgCourseArray);
                     adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerCourse.setAdapter(adapter1);
 
                 } else if (mSpinnerGraduationLevelPos == 1) {
 
-                    ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mDdCourseArray);
+                    ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mDdCourseArray);
                     adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerCourse.setAdapter(adapter2);
 
                 } else {
 
-                    ArrayAdapter<String>adapter3 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mPgCourseArray);
+                    ArrayAdapter<String>adapter3 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mPgCourseArray);
                     adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerCourse.setAdapter(adapter3);
 
@@ -116,19 +116,19 @@ public class Contribute extends AppCompatActivity {
 
                 if (mSpinnerGraduationLevelPos == 0){
 
-                    ArrayAdapter<String>adapter1 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mUgSemesterArray);
+                    ArrayAdapter<String>adapter1 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mUgSemesterArray);
                     adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerSemester.setAdapter(adapter1);
 
                 } else if (mSpinnerGraduationLevelPos ==1) {
 
-                    ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mDdSemesterArray);
+                    ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mDdSemesterArray);
                     adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerSemester.setAdapter(adapter2);
 
                 } else {
 
-                    ArrayAdapter<String>adapter3 = new ArrayAdapter<String>(Contribute.this, android.R.layout.simple_spinner_item, mPgSemesterArray);
+                    ArrayAdapter<String>adapter3 = new ArrayAdapter<String>(Upload.this, android.R.layout.simple_spinner_item, mPgSemesterArray);
                     adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerSemester.setAdapter(adapter3);
                 }
@@ -170,7 +170,7 @@ public class Contribute extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(Contribute.this, SubjectList.class);
+                Intent intent = new Intent(Upload.this, SubjectList.class);
                 startActivity(intent);
                 this.finish();
                 return true;
@@ -189,7 +189,7 @@ public class Contribute extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Intent intent = new Intent(Contribute.this, SubjectList.class);
+        Intent intent = new Intent(Upload.this, SubjectList.class);
         startActivity(intent);
         this.finish();
     }
@@ -215,11 +215,11 @@ public class Contribute extends AppCompatActivity {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, URI);
             }
             emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
-            this.startActivity(Intent.createChooser(emailIntent, "Please use institute mail id"));
+            this.startActivity(Intent.createChooser(emailIntent, "Send Email"));
         } catch (Throwable t) {
             runOnUiThread(new Runnable(){
                 public void run() {
-                    Toast.makeText(Contribute.this, "Please install Gmail", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Upload.this, "Email service not found", Toast.LENGTH_LONG).show();
                 }
             });
         }

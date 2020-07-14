@@ -2,13 +2,10 @@ package com.example.myebook.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -83,9 +80,11 @@ public class SubjectList extends AppCompatActivity {
         //getting the list of files in folder in string array
         mSubjects = folder.list();
 
+        if(mSubjects == null) {
+            mSubjects = new String[]{""};
+        }
 
         //showing empty message while folders array is empty
-        assert mSubjects != null;
         if(mSubjects.length == 0) {
             mEmptyMessage.setVisibility(View.VISIBLE);
             mSubjectListView.setVisibility(View.GONE);
@@ -125,7 +124,7 @@ public class SubjectList extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         // adding menu
-        inflater.inflate(R.menu.menu_contribute, menu);
+        inflater.inflate(R.menu.menu_upload, menu);
         inflater.inflate(R.menu.menu_download, menu);
         inflater.inflate(R.menu.menu_mark, menu);
         // adding the delete menu by default
@@ -143,7 +142,7 @@ public class SubjectList extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem contribute = menu.findItem(R.id.contribute);
+        MenuItem contribute = menu.findItem(R.id.upload);
         MenuItem download = menu.findItem(R.id.download);
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
@@ -177,8 +176,8 @@ public class SubjectList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.contribute:
-                Intent intent = new Intent(SubjectList.this, Contribute.class);
+            case R.id.upload:
+                Intent intent = new Intent(SubjectList.this, Upload.class);
                 startActivity(intent);
                 this.finish();
                 return true;
