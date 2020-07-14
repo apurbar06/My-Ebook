@@ -93,6 +93,7 @@ public class SubjectList extends AppCompatActivity {
             mEmptyMessage.setVisibility(View.GONE);
         }
 
+
         //the adapter to load data into list
         mSubjectListAdapter = new ReadableSubjectListAdapter(SubjectList.this, mSubjects, readyForDelete);
         //attaching adapter to mGridView
