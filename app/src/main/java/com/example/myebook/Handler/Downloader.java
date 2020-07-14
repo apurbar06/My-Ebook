@@ -1,18 +1,17 @@
 package com.example.myebook.Handler;
 
 import android.app.Activity;
-import android.app.PendingIntent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.myebook.BroadcastReceiver.NotificationActionReceiver;
 import com.example.myebook.R;
 
 import java.io.File;
@@ -24,8 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 public class Downloader extends AsyncTask<String, Integer, Void> {
 
@@ -37,8 +34,8 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
     private String mFileLocation;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private NotificationManagerCompat notificationManager;
-    private NotificationCompat.Builder builder;
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
     private static final String CHANNEL_ID = "id";
     private int notificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
     private static final int  MEGABYTE = 1024 * 1024;
@@ -63,9 +60,10 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
 
         super.onPreExecute();
-        notificationManager = NotificationManagerCompat.from(mContext);
-        builder = new NotificationCompat.Builder(mContext, CHANNEL_ID);
-        builder.setContentTitle("My Ebook")
+        mBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), CHANNEL_ID);
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mBuilder.setContentTitle("My Ebook")
                 .setContentText("Download in progress")
                 .setSmallIcon(R.drawable.ic_e)
                 .setOngoing(true);
@@ -73,11 +71,26 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 //                .addAction(actionCancel);
 //                    .setPriority(NotificationCompat.PRIORITY_HIGH);
 
+
+        // Android 8 introduced a new requirement of setting the channelId property by
+        // using a NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = CHANNEL_ID;
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+
         // Issue the initial notification with zero progress
         int PROGRESS_MAX = 100;
         int PROGRESS_CURRENT = 0;
-        builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-        notificationManager.notify(notificationId, builder.build());
+        mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+        mNotificationManager.notify(notificationId, mBuilder.build());
 
     }
 
@@ -94,7 +107,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
         String fileName = strings[2];  // pdf file name
 
-        builder.setContentTitle(fileName);
+        mBuilder.setContentTitle(fileName);
         mFileLocation = fileFolder +"/"+ fileName;
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
@@ -152,18 +165,18 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
     protected void onProgressUpdate(Integer... progress) {
 
-        builder.setProgress(100, progress[0], false);
+        mBuilder.setProgress(100, progress[0], false);
         // Displays the progress bar on notification
-        notificationManager.notify(notificationId, builder.build());
+        mNotificationManager.notify(notificationId, mBuilder.build());
     }
 
 
     protected void onPostExecute(Void result){
-        builder.setContentText("Download complete")
+        mBuilder.setContentText("Download complete")
                 .setOngoing(false);
         // Removes the progress bar
-        builder.setProgress(0,0,false);
-        notificationManager.notify(notificationId, builder.build());
+        mBuilder.setProgress(0,0,false);
+        mNotificationManager.notify(notificationId, mBuilder.build());
 
         mEditor = mSharedPreferences.edit();
         mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string
