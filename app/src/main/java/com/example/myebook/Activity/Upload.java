@@ -1,6 +1,11 @@
 package com.example.myebook.Activity;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +22,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 
 import com.example.myebook.R;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Upload extends AppCompatActivity {
 
@@ -207,8 +218,8 @@ public class Upload extends AppCompatActivity {
 
         try {
             String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nFile Name : "+ mFileName;
-            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("plain/text");
+            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:"));
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});
             emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Contribution to My Ebook.");
             if (URI != null) {
