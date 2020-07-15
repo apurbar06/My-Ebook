@@ -31,6 +31,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
+    private String fileName;
     private String mFileLocation;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -59,7 +60,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
 
 
-        super.onPreExecute();
+//        super.onPreExecute();
         mBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), CHANNEL_ID);
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -72,6 +73,12 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 //                    .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
+        // Issue the initial notification with zero progress
+        int PROGRESS_MAX = 100;
+        int PROGRESS_CURRENT = 0;
+        mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+
+
         // Android 8 introduced a new requirement of setting the channelId property by
         // using a NotificationChannel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -79,17 +86,19 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
             String channelId = CHANNEL_ID;
             NotificationChannel channel = new NotificationChannel(
                     channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_HIGH);
+                    "My Ebook channel",
+                    NotificationManager.IMPORTANCE_LOW);
+
+            //Configure the notification channel, NO SOUND
+            channel.setDescription("no sound");
+            channel.setSound(null,null); // ignore sound
+            channel.enableVibration(false);
+
             mNotificationManager.createNotificationChannel(channel);
             mBuilder.setChannelId(channelId);
         }
 
 
-        // Issue the initial notification with zero progress
-        int PROGRESS_MAX = 100;
-        int PROGRESS_CURRENT = 0;
-        mBuilder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
         mNotificationManager.notify(notificationId, mBuilder.build());
 
     }
@@ -105,7 +114,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
         String fileUrl = strings[0];   // the url for download the pdf
         String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
-        String fileName = strings[2];  // pdf file name
+        fileName = strings[2];  // pdf file name
 
         mBuilder.setContentTitle(fileName);
         mFileLocation = fileFolder +"/"+ fileName;
@@ -172,12 +181,45 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
 
     protected void onPostExecute(Void result){
-        mBuilder.setContentText("Download complete")
+
+        /*
+        * First cancelling the Notification Then Showing Again
+        * */
+        mNotificationManager.cancel(notificationId);
+
+        mBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), CHANNEL_ID);
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mBuilder.setContentTitle(fileName)
+                .setContentText("Download complete")
+                .setSmallIcon(R.drawable.ic_e)
                 .setOngoing(false);
-        // Removes the progress bar
-        mBuilder.setProgress(0,0,false);
+
+        // Android 8 introduced a new requirement of setting the channelId property by
+        // using a NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = CHANNEL_ID;
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "My Ebook channel",
+                    NotificationManager.IMPORTANCE_LOW);
+
+//            //Configure the notification channel, NO SOUND
+//            channel.setDescription("no sound");
+//            channel.setSound(null,null); // ignore sound
+//            channel.enableVibration(false);
+
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
         mNotificationManager.notify(notificationId, mBuilder.build());
 
+
+        /*
+        * keeping track that the download task if the file is completed
+        * */
         mEditor = mSharedPreferences.edit();
         mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string
         mEditor.apply(); // apply changes
