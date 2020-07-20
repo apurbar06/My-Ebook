@@ -23,8 +23,6 @@ public class RequestAppPermission {
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     }, requestCode);
         }
-
-
     }
 
     private boolean hasReadPermissions(Activity context) {

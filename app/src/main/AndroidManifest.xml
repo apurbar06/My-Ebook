@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
 <!--            If your targetSdkVersion >= 24, then we have to use FileProvider class to give access to
                 the particular file or folder to make them accessible for other apps. We create our own
                 class inheriting FileProvider in order to make sure our FileProvider doesn't conflict with

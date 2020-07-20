@@ -1,11 +1,6 @@
 package com.example.myebook.Activity;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,15 +17,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ShareCompat;
 
 import com.example.myebook.R;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Upload extends AppCompatActivity {
 
@@ -43,7 +32,7 @@ public class Upload extends AppCompatActivity {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    private String mFileName;
+    private String mComment;
     private EditText mEditText;
     private TextView mTvAttachment;
     private Uri URI = null;
@@ -214,10 +203,10 @@ public class Upload extends AppCompatActivity {
     public void sendEmail() {
         Log.d(TAG, "sendEmail: " + mGraduationLevel + mCourse + mSemester + mEditText.getText().toString());
 
-        mFileName = mEditText.getText().toString();
+        mComment = mEditText.getText().toString();
 
         try {
-            String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nFile Name : "+ mFileName;
+            String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nFile Name : "+ mComment;
             final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
             emailIntent.setData(Uri.parse("mailto:"));
             emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});

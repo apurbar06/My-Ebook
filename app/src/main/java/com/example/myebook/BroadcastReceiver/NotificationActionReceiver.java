@@ -17,12 +17,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         Log.d(TAG, "onReceive: " + intent.getAction());
-        Log.d(TAG, "onReceive: ");
 
 
         if (intent.getAction().equalsIgnoreCase("PAUSE")) {
             Toast.makeText(context, "Booking your ride", Toast.LENGTH_SHORT).show();
         } else if (intent.getAction().equalsIgnoreCase("CANCEL")) {
+
+            Toast.makeText(context, "your ride is canceled", Toast.LENGTH_SHORT).show();
 
 //            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //            notificationManager.cancel(11111);

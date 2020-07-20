@@ -3,6 +3,8 @@ package com.example.myebook.Adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +13,8 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myebook.Handler.Downloader;
 import com.example.myebook.R;
@@ -82,9 +84,13 @@ public class DownloadableEbookListAdapter extends BaseAdapter {
                 buttonClicked.setFillAfter(true);
                 v.startAnimation(buttonClicked);
 
-                //download pdf using new thread
-                d = new Downloader(mContext);
-                d.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mURL[position], mSubject, mTitle[position]);
+                if(checkInternetConnection()) {
+                    //download pdf using new thread
+                    d = new Downloader(mContext);
+                    d.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mURL[position], mSubject, mTitle[position]);
+                } else {
+                    Toast.makeText(mContext, "Check internet connectivity", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -96,6 +102,23 @@ public class DownloadableEbookListAdapter extends BaseAdapter {
     boolean cancel(){
         return d.cancel(true);
     }
+
+
+    @SuppressLint("LongLogTag")
+    private boolean checkInternetConnection() {
+        // get Connectivity Manager object to check connection
+        ConnectivityManager connectivityManager
+                =(ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Check for network connections
+        if (    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
 
 }
