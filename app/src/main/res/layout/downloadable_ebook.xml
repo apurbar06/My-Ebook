@@ -8,7 +8,7 @@
         android:id="@+id/image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_pdf_icon"
+        android:src="@drawable/ic_ebook"
         android:layout_alignParentLeft="true"
         android:padding="8dp"/>
 

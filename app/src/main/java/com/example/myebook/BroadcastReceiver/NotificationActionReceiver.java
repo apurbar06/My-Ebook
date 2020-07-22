@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-/**
- * Currently there is no use of this
- */
 public class NotificationActionReceiver extends BroadcastReceiver {
 
     private static final String TAG = "NotificationAction";
+    public boolean mIsCanceled = false;
+
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -23,7 +23,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             Toast.makeText(context, "Booking your ride", Toast.LENGTH_SHORT).show();
         } else if (intent.getAction().equalsIgnoreCase("CANCEL")) {
 
+            Log.d(TAG, "onReceivex: canceled");
             Toast.makeText(context, "your ride is canceled", Toast.LENGTH_SHORT).show();
+            mIsCanceled = true;
 
 //            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //            notificationManager.cancel(11111);

@@ -104,7 +104,7 @@ public class DownloadableEbookListAdapter extends BaseAdapter {
     }
 
 
-    @SuppressLint("LongLogTag")
+
     private boolean checkInternetConnection() {
         // get Connectivity Manager object to check connection
         ConnectivityManager connectivityManager

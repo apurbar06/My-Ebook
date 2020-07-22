@@ -4,15 +4,17 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.example.myebook.BroadcastReceiver.NotificationActionReceiver;
 import com.example.myebook.R;
@@ -141,6 +143,13 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 //            e.printStackTrace();
         }
 
+        /*
+         * keeping track of the download task
+         * */
+        mEditor = mSharedPreferences.edit();
+        mEditor.putString(mFileLocation, "DownloadStarted");
+        mEditor.apply(); // apply changes
+
         downloadFile(fileUrl, pdfFile);
         return null;
     }
@@ -167,7 +176,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
                 total += bufferLength;
                 // publishing the progress
                 publishProgress((int)((total*100)/totalSize));
-                mBuilder.setContentTitle(df.format((total*0.1)/(MEGABYTE*0.1)) +"/"+ df.format ((totalSize*0.1)/(MEGABYTE*0.1)) +"MB "+ fileName);
+                mBuilder.setContentTitle(df.format ((totalSize*0.1)/(MEGABYTE*0.1)) +"MB  "+ fileName);
                 // writing data to output file
                 fileOutputStream.write(buffer, 0, bufferLength);
             }
@@ -228,7 +237,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
 
         /*
-        * keeping track that the download task if the file is completed
+        * keeping track of the download task if it is completed
         * */
         mEditor = mSharedPreferences.edit();
         mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string

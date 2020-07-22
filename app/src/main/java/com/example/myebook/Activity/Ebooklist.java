@@ -168,7 +168,7 @@ public class Ebooklist extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 try {
                     //This if part will execute when the download will be completed
-                    if(mSharedPreferences.getString(fileLocation, "DownloadIncomplete").equals("DownloadCompleted")) {
+                    if(mSharedPreferences.getString(fileLocation, "PreviouslyDownloaded").equals("DownloadCompleted") || mSharedPreferences.getString(fileLocation, "PreviouslyDownloaded").equals("PreviouslyDownloaded")) {
 
                         startActivity(intent);
                     } else {
