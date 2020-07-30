@@ -1,5 +1,7 @@
 package com.example.myebook.Activity;
 
+import android.annotation.SuppressLint;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,11 +17,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myebook.R;
+
+import java.io.File;
+import java.util.List;
 
 public class Upload extends AppCompatActivity {
 
@@ -45,6 +53,19 @@ public class Upload extends AppCompatActivity {
     private static final String[] mDdSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"};
     private static final String[] mPgSemesterArray = {"First", "Second", "Third", "Fourth"};
 
+
+    // GetContent creates an ActivityResultLauncher<String> to allow you to pass
+    // in the mime type you'd like to allow the user to select
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                    URI = uri;
+                    mTvAttachment.setText(URI.getLastPathSegment());
+
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +199,8 @@ public class Upload extends AppCompatActivity {
                 sendEmail();
                 return true;
             case R.id.attach:
-                openFolder();
+                mGetContent.launch("*/*");
+//                openFolder();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -206,47 +228,48 @@ public class Upload extends AppCompatActivity {
         mComment = mEditText.getText().toString();
 
         try {
-            String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nFile Name : "+ mComment;
-            final Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(Uri.parse("mailto:"));
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});
-            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Contribution to My Ebook.");
+            String message = "Graduation Level : "+ mGraduationLevel +"\nCourse : "+ mCourse +"\nSemester : "+ mSemester +"\nComment : "+ mComment;
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("text/html");
+            emailIntent.setPackage("com.google.android.gm");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contribution to My Ebook.");
             if (URI != null) {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, URI);
             }
-            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+            emailIntent.putExtra(Intent.EXTRA_TEXT, message);
             this.startActivity(Intent.createChooser(emailIntent, "Send Email"));
         } catch (Throwable t) {
             runOnUiThread(new Runnable(){
                 public void run() {
-                    Toast.makeText(Upload.this, "Email service not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Upload.this, "Gmail not found", Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
-    /**
-     * This will execute when the attach button is clicked
-     */
-    public void openFolder() {
-        Intent intent = new Intent();
-        intent.setType("*/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_STORAGE);
-    }
-
-
-    /**
-     * This will execute when startActivityForResult() in openFolder is called
-     */
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_FROM_STORAGE && resultCode == RESULT_OK) {
-            URI = data.getData();
-            mTvAttachment.setText(URI.getLastPathSegment());
-//            tvAttachment.setVisibility(View.VISIBLE);
-        }
-    }
+//    /**
+//     * This will execute when the attach button is clicked
+//     */
+//    public void openFolder() {
+//        Intent intent = new Intent();
+//        intent.setType("*/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        intent.putExtra("return-data", true);
+//        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_STORAGE);
+//    }
+//
+//
+//    /**
+//     * This will execute when startActivityForResult() in openFolder is called
+//     */
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_FROM_STORAGE && resultCode == RESULT_OK) {
+//            URI = data.getData();
+//            mTvAttachment.setText(URI.getLastPathSegment());
+////            tvAttachment.setVisibility(View.VISIBLE);
+//        }
+//    }
 
 }

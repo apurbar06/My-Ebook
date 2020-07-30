@@ -110,14 +110,14 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         mSemester = mSharedPreferences.getString("Semester", null);
 
 
-//        Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
-//        Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
-//
-//        PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
-//        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
-//        NotificationCompat.Action actionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
+        Intent intentPause = new Intent(mContext, NotificationActionReceiver.class).setAction("PAUSE");
+        Intent intentCancel = new Intent(mContext, NotificationActionReceiver.class).setAction("CANCEL");
+
+        PendingIntent pendingIntentPause = PendingIntent.getBroadcast(mContext, 12345, intentPause, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(mContext, 12346, intentCancel, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Action actionPause = new NotificationCompat.Action.Builder(R.drawable.ic_book_icon, "Pause", pendingIntentPause).build();
+        NotificationCompat.Action actionCancel = new NotificationCompat.Action.Builder(R.drawable.ic_download_icon, "Cancel", pendingIntentCancel).build();
 
 
 
@@ -125,9 +125,9 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
         fileName = strings[2];  // pdf file name
 
-        mBuilder.setContentTitle(fileName);
-//                .addAction(actionPause)
-//                .addAction(actionCancel);
+        mBuilder.setContentTitle(fileName)
+                .addAction(actionPause)
+                .addAction(actionCancel);
         mFileLocation = fileFolder +"/"+ fileName;
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();

@@ -51,7 +51,9 @@
         <activity
             android:name=".Activity.DownloadEbook"
             android:label="Download" />
-        <activity android:name=".Activity.MainActivity">
+        <activity
+            android:name=".Activity.MainActivity"
+            android:screenOrientation = "portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
