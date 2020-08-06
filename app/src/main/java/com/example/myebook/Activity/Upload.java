@@ -232,7 +232,7 @@ public class Upload extends AppCompatActivity {
             Intent emailIntent = new Intent(Intent.ACTION_SEND);
             emailIntent.setType("text/html");
             emailIntent.setPackage("com.google.android.gm");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"apurbar011@gmail.com"});
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"myebook711@gmail.com"});
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contribution to My Ebook.");
             if (URI != null) {
                 emailIntent.putExtra(Intent.EXTRA_STREAM, URI);

@@ -1,8 +1,10 @@
 package com.example.myebook.Adapter;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -15,6 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.myebook.Handler.Downloader;
 import com.example.myebook.R;
@@ -84,13 +89,22 @@ public class DownloadableEbookListAdapter extends BaseAdapter {
                 buttonClicked.setFillAfter(true);
                 v.startAnimation(buttonClicked);
 
-                if(checkInternetConnection()) {
-                    //download pdf using new thread
-                    d = new Downloader(mContext);
-                    d.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mURL[position], mSubject, mTitle[position]);
+                //Checking the read and write permission before downloading
+                if ( hasReadPermissions(mContext) && hasWritePermissions(mContext) ) {
+
+                    if(checkInternetConnection()) {
+                        //download pdf using new thread
+                        d = new Downloader(mContext);
+                        d.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mURL[position], mSubject, mTitle[position]);
+                    } else {
+                        Toast.makeText(mContext, "Check internet connectivity", Toast.LENGTH_LONG).show();
+                    }
+
                 } else {
-                    Toast.makeText(mContext, "Check internet connectivity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Please allow permission to access storage for downloading and storing files", Toast.LENGTH_LONG).show();
                 }
+
+
 
             }
         });
@@ -103,6 +117,14 @@ public class DownloadableEbookListAdapter extends BaseAdapter {
         return d.cancel(true);
     }
 
+
+    private boolean hasReadPermissions(Activity context) {
+        return (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean hasWritePermissions(Activity context) {
+        return (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+    }
 
 
     private boolean checkInternetConnection() {

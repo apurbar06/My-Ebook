@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,10 +36,12 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
     private String mGraduationLevel;
     private String mCourse;
     private String mSemester;
-    private String fileName;
+    private String mFileName;
     private String mFileLocation;
+    private File mPdfFile;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
+    private boolean mFileNotFoundException = false;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private static final String CHANNEL_ID = "id";
@@ -123,12 +124,12 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
         String fileUrl = strings[0];   // the url for download the pdf
         String fileFolder = mGraduationLevel +"/"+ mCourse +"/"+ mSemester +"/"+ strings[1];  //GraduationLevel -> Course -> Semester -> subject name
-        fileName = strings[2];  // pdf file name
+        mFileName = strings[2];  // pdf file name
 
-        mBuilder.setContentTitle(fileName)
+        mBuilder.setContentTitle(mFileName)
                 .addAction(actionPause)
                 .addAction(actionCancel);
-        mFileLocation = fileFolder +"/"+ fileName;
+        mFileLocation = fileFolder +"/"+ mFileName;
 
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDirectory, "MyEbook/" + fileFolder);
@@ -136,9 +137,9 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
             folder.mkdirs();
         }
 
-        File pdfFile = new File(folder, fileName);
+        mPdfFile = new File(folder, mFileName);
         try{
-            pdfFile.createNewFile();
+            mPdfFile.createNewFile();
         }catch (IOException e){
 //            e.printStackTrace();
         }
@@ -150,7 +151,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         mEditor.putString(mFileLocation, "DownloadStarted");
         mEditor.apply(); // apply changes
 
-        downloadFile(fileUrl, pdfFile);
+        downloadFile(fileUrl, mPdfFile);
         return null;
     }
 
@@ -176,12 +177,21 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
                 total += bufferLength;
                 // publishing the progress
                 publishProgress((int)((total*100)/totalSize));
-                mBuilder.setContentTitle(df.format ((totalSize*0.1)/(MEGABYTE*0.1)) +"MB  "+ fileName);
+                mBuilder.setContentTitle(df.format ((totalSize*0.1)/(MEGABYTE*0.1)) +"MB  "+ mFileName);
                 // writing data to output file
                 fileOutputStream.write(buffer, 0, bufferLength);
             }
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
+            Log.d(TAG, "downloadFile: error 1");
+
+            mFileNotFoundException = true;
+            mContext.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(mContext, "Can't download file right now. The limit of 1GB per day for this app has been exceeded. Please try again later", Toast.LENGTH_LONG).show();
+                }
+            });
+
             e.printStackTrace();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -209,39 +219,72 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         mBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), CHANNEL_ID);
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mBuilder.setContentTitle(fileName)
-                .setContentText("Download complete")
-                .setSmallIcon(R.drawable.ic_e)
-                .setOngoing(false);
+        if(mFileNotFoundException) {
+            mBuilder.setContentTitle(mFileName)
+                    .setContentText("Download error")
+                    .setSmallIcon(R.drawable.ic_e)
+                    .setOngoing(false);
 
-        // Android 8 introduced a new requirement of setting the channelId property by
-        // using a NotificationChannel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            String channelId = CHANNEL_ID;
-            NotificationChannel channel = new NotificationChannel(
-                    channelId,
-                    "My Ebook channel",
-                    NotificationManager.IMPORTANCE_LOW);
+            // Android 8 introduced a new requirement of setting the channelId property by
+            // using a NotificationChannel.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                String channelId = CHANNEL_ID;
+                NotificationChannel channel = new NotificationChannel(
+                        channelId,
+                        "My Ebook channel",
+                        NotificationManager.IMPORTANCE_LOW);
 
 //            //Configure the notification channel, NO SOUND
 //            channel.setDescription("no sound");
 //            channel.setSound(null,null); // ignore sound
 //            channel.enableVibration(false);
 
-            mNotificationManager.createNotificationChannel(channel);
-            mBuilder.setChannelId(channelId);
+                mNotificationManager.createNotificationChannel(channel);
+                mBuilder.setChannelId(channelId);
+            }
+            mNotificationManager.notify(notificationId, mBuilder.build());
+
+            mSharedPreferences.edit().remove(mFileLocation).apply();
+            mPdfFile.delete();
+
+        } else {
+            mBuilder.setContentTitle(mFileName)
+                    .setContentText("Download complete")
+                    .setSmallIcon(R.drawable.ic_e)
+                    .setOngoing(false);
+
+            // Android 8 introduced a new requirement of setting the channelId property by
+            // using a NotificationChannel.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                String channelId = CHANNEL_ID;
+                NotificationChannel channel = new NotificationChannel(
+                        channelId,
+                        "My Ebook channel",
+                        NotificationManager.IMPORTANCE_LOW);
+
+//            //Configure the notification channel, NO SOUND
+//            channel.setDescription("no sound");
+//            channel.setSound(null,null); // ignore sound
+//            channel.enableVibration(false);
+
+                mNotificationManager.createNotificationChannel(channel);
+                mBuilder.setChannelId(channelId);
+            }
+
+            mNotificationManager.notify(notificationId, mBuilder.build());
+
+
+            /*
+             * keeping track of the download task if it is completed
+             * */
+            mEditor = mSharedPreferences.edit();
+            mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string
+            mEditor.apply(); // apply changes
         }
 
-        mNotificationManager.notify(notificationId, mBuilder.build());
 
-
-        /*
-        * keeping track of the download task if it is completed
-        * */
-        mEditor = mSharedPreferences.edit();
-        mEditor.putString(mFileLocation, "DownloadCompleted"); // Storing string
-        mEditor.apply(); // apply changes
     }
 
 
