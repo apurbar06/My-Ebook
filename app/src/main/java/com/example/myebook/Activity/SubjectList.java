@@ -131,6 +131,7 @@ public class SubjectList extends AppCompatActivity {
         // adding the delete menu by default
         inflater.inflate(R.menu.menu_delete, menu);
         inflater.inflate(R.menu.menu_setup, menu);
+        inflater.inflate(R.menu.menu_about, menu);
 
         return true;
     }
@@ -148,12 +149,14 @@ public class SubjectList extends AppCompatActivity {
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
         MenuItem setup = menu.findItem(R.id.setup);
+        MenuItem about = menu.findItem(R.id.about);
         if(mSubjects.length == 0) {
             mark.setVisible(false);
             delete.setVisible(false);
             contribute.setVisible(true);
             download.setVisible(true);
             setup.setVisible(true);
+            about.setVisible(true);
         } else {
             if (readyForDelete) {
                 mark.setTitle("Undo");
@@ -161,12 +164,14 @@ public class SubjectList extends AppCompatActivity {
                 contribute.setVisible(false);
                 download.setVisible(false);
                 setup.setVisible(false);
+                about.setVisible(false);
             } else {
                 mark.setTitle("Mark");
                 delete.setVisible(false);
                 contribute.setVisible(true);
                 download.setVisible(true);
                 setup.setVisible(true);
+                about.setVisible(true);
             }
         }
 
@@ -178,13 +183,18 @@ public class SubjectList extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.upload:
-                Intent intent = new Intent(SubjectList.this, Upload.class);
-                startActivity(intent);
+                Intent uploadIntent = new Intent(SubjectList.this, Upload.class);
+                startActivity(uploadIntent);
                 this.finish();
                 return true;
             case R.id.download:
-                Intent intent1 = new Intent(SubjectList.this, DownloadEbook.class);
-                startActivity(intent1);
+                Intent downloadIntent = new Intent(SubjectList.this, DownloadEbook.class);
+                startActivity(downloadIntent);
+                this.finish();
+                return true;
+            case R.id.about:
+                Intent aboutIntent = new Intent(SubjectList.this, About.class);
+                startActivity(aboutIntent);
                 this.finish();
                 return true;
             case R.id.mark:
@@ -200,8 +210,8 @@ public class SubjectList extends AppCompatActivity {
                 mEditor = mSharedPreferences.edit();
                 mEditor.putString("makeSetup", "Yes"); // Storing string
                 mEditor.apply(); // apply changes
-                Intent intent2 = new Intent(SubjectList.this, MainActivity.class);
-                startActivity(intent2);
+                Intent setupIntent = new Intent(SubjectList.this, MainActivity.class);
+                startActivity(setupIntent);
                 this.finish();
                 return true;
             default:

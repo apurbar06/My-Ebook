@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myebook">
+    package="com.example.myebook" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
-<!--            If your targetSdkVersion >= 24, then we have to use FileProvider class to give access to
+        android:usesCleartextTraffic="true" >
+        <!--
+                    If your targetSdkVersion >= 24, then we have to use FileProvider class to give access to
                 the particular file or folder to make them accessible for other apps. We create our own
                 class inheriting FileProvider in order to make sure our FileProvider doesn't conflict with
                 FileProviders declared in imported dependencies
--->
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <receiver
             android:name=".BroadcastReceiver.NotificationActionReceiver"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
-                <action android:name="PAUSE" > </action>
-                <action android:name="CANCEL" > </action>
+                <action android:name="PAUSE" />
+                <action android:name="CANCEL" />
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".Activity.Ebooklist" />
-        <activity
-            android:name=".Activity.SubjectList" />
+        <activity android:name=".Activity.Ebooklist" />
+        <activity android:name=".Activity.SubjectList" />
         <activity
             android:name=".Activity.Upload"
             android:label="Upload" />
@@ -52,8 +50,11 @@
             android:name=".Activity.DownloadEbook"
             android:label="Download" />
         <activity
+            android:name=".Activity.About"
+            android:label="About" />
+        <activity
             android:name=".Activity.MainActivity"
-            android:screenOrientation = "portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
