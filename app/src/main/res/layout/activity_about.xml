@@ -1,10 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Activity.About">
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical" >
+
+    <!-- TextView and other stuff -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Ebook, a common platform for study materials."
+        android:textColor="#29292E"
+        android:textSize="25dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Ebook/Home  :"
+        android:textColor="#050505"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="In this section the app shows previously downloaded materials according to your setup."
+        android:textColor="#252323"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Setup :"
+        android:textColor="#050505"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make the setup according to your graduation level, course and semester. "
+        android:textColor="#252323"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download  :"
+        android:textColor="#050505"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="According to your setup the app will show study materials that are currently available in the server. See the materials and download which you need, simply using the download button. The app will automatically store what you have downloaded in phone storage in an arranged order. The arrangement will be done according to your setup."
+        android:textColor="#252323"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload   :"
+        android:textColor="#050505"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload study materials that you have. To upload, this app will use your Gmail application. In case you don't have Gmail installed in your phone please install it and try uploading."
+        android:textColor="#252323"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Issue :"
+        android:textColor="#F10606"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This app is using free storage service from Firebase Storage. So there is a limitation of total 1GB download per day. While you try to download and it fails because of this cause please wait until next day and try again."
+        android:textColor="#252323"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp" />
+
+
+
+
+  </LinearLayout>
+</ScrollView>
