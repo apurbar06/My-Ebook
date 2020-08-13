@@ -41,7 +41,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
     private File mPdfFile;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
-    private boolean mFileNotFoundException = false;
+    private boolean mDownloadFailed = false;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
     private static final String CHANNEL_ID = "id";
@@ -158,12 +158,15 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
     public void downloadFile(String fileUrl, File directory){
 
+        HttpURLConnection urlConnection = null;
+
         try {
 
             URL url = new URL(fileUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-//            urlConnection.setDoOutput(true);
+//            urlConnection.setDoOutput(true);  //To upload data to a web server
+//            urlConnection.setChunkedStreamingMode(0);
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -185,7 +188,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         } catch (FileNotFoundException e) {
             Log.d(TAG, "downloadFile: error 1");
 
-            mFileNotFoundException = true;
+            mDownloadFailed = true;
             mContext.runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(mContext, "Can't download file right now. The limit of 1GB per day for this app has been exceeded. Please try again later", Toast.LENGTH_LONG).show();
@@ -194,9 +197,36 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
 
             e.printStackTrace();
         } catch (MalformedURLException e) {
+            Log.d(TAG, "downloadFile: error 2");
+            mDownloadFailed = true;
+            mContext.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(mContext, "Download failed", Toast.LENGTH_LONG).show();
+                }
+            });
             e.printStackTrace();
         } catch (IOException e) {
+            Log.d(TAG, "downloadFile: error 3");
+            mDownloadFailed = true;
+            mContext.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(mContext, "Download failed", Toast.LENGTH_LONG).show();
+                }
+            });
             e.printStackTrace();
+        }  catch (Exception e) {
+            Log.d(TAG, "downloadFile: error 4");
+            mDownloadFailed = true;
+            mContext.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(mContext, "Download failed", Toast.LENGTH_LONG).show();
+                }
+            });
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
     }
 
@@ -219,7 +249,7 @@ public class Downloader extends AsyncTask<String, Integer, Void> {
         mBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(), CHANNEL_ID);
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if(mFileNotFoundException) {
+        if(mDownloadFailed) {
             mBuilder.setContentTitle(mFileName)
                     .setContentText("Download error")
                     .setSmallIcon(R.drawable.ic_e)
