@@ -125,7 +125,7 @@ public class SubjectList extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         // adding menu
-        inflater.inflate(R.menu.menu_upload, menu);
+        inflater.inflate(R.menu.menu_contribute, menu);
         inflater.inflate(R.menu.menu_download, menu);
         inflater.inflate(R.menu.menu_mark, menu);
         // adding the delete menu by default
@@ -144,7 +144,7 @@ public class SubjectList extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem contribute = menu.findItem(R.id.upload);
+        MenuItem contribute = menu.findItem(R.id.contribute);
         MenuItem download = menu.findItem(R.id.download);
         MenuItem delete = menu.findItem(R.id.delete);
         MenuItem mark = menu.findItem(R.id.mark);
@@ -182,8 +182,8 @@ public class SubjectList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.upload:
-                Intent uploadIntent = new Intent(SubjectList.this, Upload.class);
+            case R.id.contribute:
+                Intent uploadIntent = new Intent(SubjectList.this, Contribute.class);
                 startActivity(uploadIntent);
                 this.finish();
                 return true;
@@ -210,7 +210,7 @@ public class SubjectList extends AppCompatActivity {
                 mEditor = mSharedPreferences.edit();
                 mEditor.putString("makeSetup", "Yes"); // Storing string
                 mEditor.apply(); // apply changes
-                Intent setupIntent = new Intent(SubjectList.this, MainActivity.class);
+                Intent setupIntent = new Intent(SubjectList.this, Setup.class);
                 startActivity(setupIntent);
                 this.finish();
                 return true;

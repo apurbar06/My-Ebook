@@ -95,7 +95,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload   :"
+        android:text="Contribute   :"
         android:textColor="#050505"
         android:textSize="20dp"
         android:layout_marginTop="20dp"
@@ -106,7 +106,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload study materials that you have. To upload, this app will use your Gmail application. In case you don't have Gmail installed in your phone please install it and try uploading."
+        android:text="Contribute study materials that you have. While contributing you will be redirected to Gmail application. In case you don't have Gmail installed in your phone please install it and keep contributing."
         android:textColor="#252323"
         android:textSize="15dp"
         android:layout_marginTop="5dp"
@@ -129,7 +129,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This app is using free storage service from Firebase Storage. So there is a limitation of total 1GB download per day. While you try to download and it fails because of this cause please wait until next day and try again."
+        android:text="This app is using free storage service from Firebase Storage. In free service there is a limitation of total 1GB download per day.  So while you are trying to download and it fails because of this cause please wait until next day and try again."
         android:textColor="#252323"
         android:textSize="15dp"
         android:layout_marginTop="5dp"
