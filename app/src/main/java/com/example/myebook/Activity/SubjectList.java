@@ -225,8 +225,8 @@ public class SubjectList extends AppCompatActivity {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My Ebook");
-            String shareMessage= "\nLet me recommend you this application\n\n";
-            shareMessage = shareMessage + "Now the link is not available. It will be available soon." + BuildConfig.APPLICATION_ID +"\n\n";
+            String shareMessage= " Let me recommend you this application.\n\n";
+            shareMessage = shareMessage + "https://github.com/apurbar06/My-Ebook-Android";
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
             startActivity(Intent.createChooser(shareIntent, "Choose one"));
         } catch(Exception e) {

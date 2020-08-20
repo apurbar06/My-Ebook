@@ -36,7 +36,7 @@ public class Setup extends AppCompatActivity {
     private static final String[] mUgSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"};
     private static final String[] mDdSemesterArray = {"First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth"};
     private static final String[] mPgSemesterArray = {"First", "Second", "Third", "Fourth"};
-    private static final String[] mGateSemesterArray = {"Not required"};
+    private static final String[] mGateSemesterArray = {"NA"};
 
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor mEditor;
@@ -128,6 +128,7 @@ public class Setup extends AppCompatActivity {
 
 
 
+            //checking what is selected as graduation level and setting the semester spinner accordingly
 
             mSpinnerCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override

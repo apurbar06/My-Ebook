@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+
+//now there is no use of this class
 public class NotificationActionReceiver extends BroadcastReceiver {
 
     private static final String TAG = "NotificationAction";
